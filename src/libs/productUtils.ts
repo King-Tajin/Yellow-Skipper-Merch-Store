@@ -9,14 +9,17 @@ export function formatPrice(price: FWPrice): string {
 }
 
 export function stripColorStyles(html: string): string {
-  return html.replace(/(<[^>]+)style="([^"]*)"/gi, (_, tag, styles) => {
-    const cleaned = styles
-      .split(";")
-      .filter((s: string) => !/^\s*color\s*:/i.test(s))
-      .join(";")
-      .replace(/;+$/, "");
-    return cleaned.trim() ? `${tag}style="${cleaned}"` : tag;
-  });
+  return html.replace(
+      /(<[^>]+)style="([^"]*)"/gi,
+      (_match: string, tag: string, styles: string) => {
+        const cleaned = styles
+            .split(";")
+            .filter((s: string) => !/^\s*color\s*:/i.test(s))
+            .join(";")
+            .replace(/;+$/, "");
+        return cleaned.trim() ? `${tag}style="${cleaned}"` : tag;
+      },
+  );
 }
 
 export function getColorsAndSizes(variants: FWVariant[]) {
@@ -32,9 +35,9 @@ export function getColorsAndSizes(variants: FWVariant[]) {
 }
 
 export function findVariant(
-  variants: FWVariant[],
-  color: string,
-  size: string,
+    variants: FWVariant[],
+    color: string,
+    size: string,
 ): FWVariant | undefined {
   return variants.find((v) => {
     const vColor = v.attributes?.color?.name ?? "";
@@ -46,9 +49,9 @@ export function findVariant(
 }
 
 export function getImagesForVariant(
-  product: FWProduct,
-  color: string,
-  size: string,
+    product: FWProduct,
+    color: string,
+    size: string,
 ): FWImage[] {
   const variantImages: FWImage[] = [];
   const seen = new Set<string>();

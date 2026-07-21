@@ -98,6 +98,8 @@ export default function StorePage() {
     }
   }, [currency]);
 
+  // Fetches products from the network on mount and whenever currency changes so it can't be derived during render.
+  // eslint-disable-next-line react-hooks/set-state-in-effect
   useEffect(() => {
     void load();
   }, [load]);

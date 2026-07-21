@@ -1,0 +1,81 @@
+YELLOW SKIPPER MERCH STORE PRIVACY POLICY
+
+Last updated: July 2026
+
+store.king-tajin.dev is operated by Roland Shikoski.
+
+For questions or data requests contact:
+  developer@king-tajin.dev
+  support@king-tajin.dev
+
+---
+
+CART (LOCAL STORAGE)
+
+Your shopping cart is stored locally in your browser using localStorage.
+This data never leaves your device and is not accessible to us. It is
+cleared if you clear your browser data.
+
+---
+
+BROWSING THE CATALOG
+
+Product listings are fetched from Fourthwall on your behalf through our
+server. Browsing the catalog does not send any personal data to us or
+to Fourthwall beyond a standard request for product information.
+
+---
+
+CHECKOUT
+
+When you click "checkout," our server asks Fourthwall to create a cart
+containing only the item IDs and quantities you selected, and you are
+then redirected to Fourthwall (https://fourthwall.king-tajin.dev) to
+complete your purchase. Any personal or payment information you enter
+at checkout - name, address, email, card details, and so on - is
+submitted directly to Fourthwall and governed by their own privacy
+policy. We receive only the order information necessary for
+fulfillment. We do not control or take responsibility for Fourthwall's
+data practices.
+
+---
+
+ANALYTICS
+
+This site uses Cloudflare Web Analytics, which collects anonymous,
+aggregated traffic data. It does not use cookies, does not track you
+across sites, and does not collect any personal information. For more
+information see https://www.cloudflare.com/web-analytics/
+
+---
+
+COOKIES
+
+store.king-tajin.dev does not use cookies.
+
+---
+
+YOUR RIGHTS
+
+If you are located in the European Union or United Kingdom, you have the
+right to access, correct, or request deletion of any personal data we
+hold about you. To exercise these rights, contact us at the email
+addresses above.
+
+If you are located in California, you have rights under the California
+Consumer Privacy Act (CCPA). We do not sell your personal data.
+
+---
+
+CHANGES TO THIS POLICY
+
+If this policy changes, the updated version will be posted at this
+location with a revised date at the top.
+
+---
+
+CONTACT
+
+Roland Shikoski
+developer@king-tajin.dev
+support@king-tajin.dev

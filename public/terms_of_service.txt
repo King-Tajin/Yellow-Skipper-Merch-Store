@@ -1,0 +1,135 @@
+YELLOW SKIPPER MERCH STORE TERMS OF SERVICE
+
+Last updated: July 2026
+
+These Terms of Service ("Terms") govern your use of store.king-tajin.dev
+("the Site"), operated by Roland Shikoski. By using the Site, you agree
+to these Terms. If you do not agree, please do not use the Site.
+
+---
+
+1. WHO WE ARE
+
+store.king-tajin.dev is operated by Roland Shikoski. For questions or
+concerns, contact us at:
+
+  developer@king-tajin.dev
+  support@king-tajin.dev
+
+---
+
+2. ELIGIBILITY
+
+You must be at least 13 years old to use the Site. By using the Site,
+you confirm that you meet this requirement. The Site is not directed at
+children under 13, and we do not knowingly collect information from
+children under 13.
+
+---
+
+3. THE SERVICE
+
+store.king-tajin.dev is a merchandise storefront for Yellow Skipper
+Games. It offers:
+
+  - A browsable catalog of official merchandise, sourced from Fourthwall
+  - A checkout flow that hands off to Fourthwall
+    (https://fourthwall.king-tajin.dev) to complete your purchase
+
+The Site is provided free of charge to browse. We reserve the right to
+modify, suspend, or discontinue any part of the Site at any time
+without notice.
+
+---
+
+4. ACCEPTABLE USE
+
+You agree not to:
+
+  - Attempt to disrupt, overload, or interfere with the Site or its
+    servers
+  - Use the Site for any unlawful purpose, including fraudulent orders
+    or payment abuse
+  - Attempt to reverse-engineer, scrape, or otherwise extract data from
+    the Site in ways not intended by its normal operation
+
+We reserve the right to block access from sources that violate these
+rules.
+
+---
+
+5. ORDERS AND MERCHANDISE
+
+All purchases are processed by Fourthwall (https://fourthwall.com).
+When you check out, you leave the Site and submit your order and
+payment information directly to Fourthwall, subject to Fourthwall's own
+terms and policies. We are not responsible for the products, prices,
+availability, shipping, or any disputes arising from purchases made
+through Fourthwall.
+
+---
+
+6. INTELLECTUAL PROPERTY
+
+Unless stated otherwise, all content on the Site - including branding,
+product designs, and assets - is the property of the operator. Open-
+source components used on the Site are subject to their respective
+licenses.
+
+---
+
+7. DISCLAIMERS
+
+THE SITE IS PROVIDED "AS IS" AND "AS AVAILABLE" WITHOUT WARRANTIES OF
+ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO WARRANTIES
+OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, OR NON-
+INFRINGEMENT.
+
+WE DO NOT WARRANT THAT THE SITE WILL BE UNINTERRUPTED, ERROR-FREE, OR
+FREE OF HARMFUL COMPONENTS.
+
+---
+
+8. LIMITATION OF LIABILITY
+
+TO THE FULLEST EXTENT PERMITTED BY APPLICABLE LAW, THE OPERATOR SHALL
+NOT BE LIABLE FOR ANY INDIRECT, INCIDENTAL, SPECIAL, CONSEQUENTIAL, OR
+PUNITIVE DAMAGES ARISING FROM YOUR USE OF, OR INABILITY TO USE, THE
+SITE - INCLUDING BUT NOT LIMITED TO LOSS OF DATA OR ANY OTHER
+INTANGIBLE LOSS - EVEN IF WE HAVE BEEN ADVISED OF THE POSSIBILITY OF
+SUCH DAMAGES.
+
+Because browsing the Site itself is free of charge, our aggregate
+liability to you for any claim arising from your use of the Site
+(as distinct from a purchase made through Fourthwall) shall not exceed
+zero dollars ($0).
+
+---
+
+9. GOVERNING LAW
+
+These Terms are governed by the laws of the United States and the State
+of Wisconsin, without regard to conflict-of-law principles. Any dispute
+that cannot be resolved informally will be subject to the exclusive
+jurisdiction of the state and federal courts located in Wisconsin.
+
+If you are located outside the United States, you acknowledge that you
+are voluntarily accessing a US-based service and agree that US law
+governs these Terms to the extent permitted by your local law.
+
+---
+
+10. CHANGES TO THESE TERMS
+
+We may update these Terms from time to time. When we do, we will update
+the "Last updated" date at the top of this document. Continued use of
+the Site after any changes constitutes acceptance of the updated Terms.
+
+---
+
+11. CONTACT
+
+If you have questions about these Terms, contact us at:
+
+  developer@king-tajin.dev
+  support@king-tajin.dev

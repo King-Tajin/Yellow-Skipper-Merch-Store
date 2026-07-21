@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>privacy_policy.txt</title>
+    <style>
+      :root {
+        color-scheme: light dark;
+      }
+      body {
+        margin: 8px;
+      }
+      pre {
+        margin: 0;
+        white-space: pre-wrap;
+        word-wrap: break-word;
+      }
+      hr {
+        border: none;
+        border-top: 1px solid currentColor;
+        opacity: 0.25;
+        margin: 4px 0;
+      }
+    </style>
+  </head>
+  <body>
+    <pre id="content"></pre>
+    <script>
+      function linkify(esc) {
+        return esc
+          .replace(
+            /(https?:\/\/[^\s,)<]+)/g,
+            (_, url) => `<a href="${url}">${url}</a>`,
+          )
+          .replace(
+            /([a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})/g,
+            (_, email) => `<a href="mailto:${email}">${email}</a>`,
+          );
+      }
+
+      function render(text) {
+        const out = [];
+        let nextIsHeading = false;
+
+        text
+          .replace(/\r/g, "")
+          .split("\n")
+          .forEach((raw, i) => {
+            const esc = raw
+              .replace(/&/g, "&amp;")
+              .replace(/</g, "&lt;")
+              .replace(/>/g, "&gt;");
+
+            if (raw === "---") {
+              out.push("</pre><hr><pre>");
+              nextIsHeading = true;
+              return;
+            }
+
+            if (nextIsHeading && raw === "") {
+              out.push("");
+              return;
+            }
+
+            const linked = linkify(esc);
+
+            if (i === 0 || nextIsHeading) {
+              const m = esc.match(/^(\d+\. )(.+)$/);
+              out.push(
+                m
+                  ? m[1] + "<u>" + linkify(m[2]) + "</u>"
+                  : "<u>" + linked + "</u>",
+              );
+              nextIsHeading = false;
+            } else {
+              out.push(linked);
+            }
+          });
+
+        return out.join("\n");
+      }
+
+      fetch("/privacy_policy.txt")
+        .then((r) => r.text())
+        .then(
+          (t) => (document.getElementById("content").innerHTML = render(t)),
+        );
+    </script>
+  </body>
+</html>

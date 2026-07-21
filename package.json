@@ -1,0 +1,67 @@
+{
+  "name": "yellow-skipper-games-merch",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "pages:dev": "wrangler pages dev --proxy 5173 -- pnpm dev",
+    "build": "vite build",
+    "preview": "vite preview",
+    "typecheck": "node ./node_modules/typescript-7/bin/tsc --noEmit",
+    "lint": "eslint . --cache --cache-location .eslintcache --cache-strategy content",
+    "format": "prettier --write \"src/**/*.{ts,tsx,js,jsx,css,md}\" \"functions/**/*.js\" \"*.{html,json,js,cjs,md}\" \"public/**/*.{html,json}\"",
+    "format:check": "prettier --check \"src/**/*.{ts,tsx,js,jsx,css,md}\" \"functions/**/*.js\" \"*.{html,json,js,cjs,md}\" \"public/**/*.{html,json}\"",
+    "check": "pnpm run format:check && pnpm run lint && pnpm run typecheck && react-doctor --verbose"
+  },
+  "dependencies": {
+    "@tailwindcss/postcss": "^4.3.3",
+    "@vitejs/plugin-react": "^6.0.3",
+    "autoprefixer": "^10.5.4",
+    "framer-motion": "^12.42.2",
+    "lucide-react": "^1.25.0",
+    "postcss": "^8.5.20",
+    "react": "^19.2.7",
+    "react-dom": "^19.2.7",
+    "tailwindcss": "^4.3.3",
+    "vite": "^8.1.5",
+    "vite-plugin-svgr": "^5.2.0"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.39.5",
+    "@types/node": "^26.1.1",
+    "@types/react": "^19.2.17",
+    "@types/react-dom": "^19.2.3",
+    "eslint": "^9.39.5",
+    "eslint-plugin-react": "^7.37.5",
+    "eslint-plugin-react-hooks": "^7.1.1",
+    "globals": "^17.7.0",
+    "husky": "^9.1.7",
+    "lint-staged": "^17.1.0",
+    "prettier": "^3.9.5",
+    "react-doctor": "^0.8.1",
+    "typescript": "^6.0.3",
+    "typescript-7": "npm:typescript@^7.0.2",
+    "typescript-eslint": "^8.64.0",
+    "wrangler": "^4.112.0"
+  },
+  "lint-staged": {
+    "src/**/*.{ts,tsx,js,jsx,css,md}": "prettier --write",
+    "functions/**/*.js": "prettier --write",
+    "*.{html,json,js,cjs,md}": "prettier --write",
+    "public/**/*.{html,json}": "prettier --write"
+  },
+  "packageManager": "pnpm@11.15.0+sha512.266f8957a30d2be6e9468e5e66bcdedd35a794175f71b067ba8504d686cce1d0c0f429b33c323c3c569ad4891e667574a49ff71d1b89a22cc66f13c65818c578"
+}

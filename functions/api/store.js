@@ -2,7 +2,7 @@
 // noinspection JSUnresolvedVariable
 
 const FW_BASE =
-    "https://storefront-api.fourthwall.com/v1/collections/all/products";
+  "https://storefront-api.fourthwall.com/v1/collections/all/products";
 
 export async function onRequestGet(context) {
   const incoming = new URL(context.request.url);
@@ -14,6 +14,18 @@ export async function onRequestGet(context) {
   const url = `${FW_BASE}?storefront_token=${context.env.FW_TOKEN}&size=${size}&page=${page}&currency=${currency}`;
 
   const fwRes = await fetch(url, { method: "GET" });
+
+  if (!fwRes.ok) {
+    const errorBody = await fwRes.text();
+    return new Response(errorBody, {
+      status: fwRes.status,
+      headers: {
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": "*",
+      },
+    });
+  }
+
   const data = await fwRes.text();
 
   if (debug) {
@@ -21,7 +33,7 @@ export async function onRequestGet(context) {
       const json = JSON.parse(data);
       const first = json.results?.[0] ?? json;
       return new Response(JSON.stringify(first, null, 2), {
-        status: 200,
+        status: fwRes.status,
         headers: {
           "Content-Type": "application/json",
           "Access-Control-Allow-Origin": "*",
@@ -29,7 +41,7 @@ export async function onRequestGet(context) {
       });
     } catch {
       return new Response(data, {
-        status: 200,
+        status: fwRes.status,
         headers: {
           "Content-Type": "text/plain",
           "Access-Control-Allow-Origin": "*",

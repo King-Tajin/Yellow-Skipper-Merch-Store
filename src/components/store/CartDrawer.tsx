@@ -106,6 +106,7 @@ export function CartDrawer({
           <div className="flex items-center gap-2">
             {items.length > 0 && (
               <button
+                type="button"
                 onClick={onClear}
                 className="flex items-center gap-1.5 px-3 py-2 bg-obsidian-800 pixel-border-sm text-gray-500 hover:text-tajin-red transition-colors font-pixel text-xs"
                 title="Clear cart"
@@ -115,6 +116,7 @@ export function CartDrawer({
               </button>
             )}
             <button
+              type="button"
               onClick={onClose}
               className="p-2 bg-obsidian-700 hover:bg-obsidian-600 text-gray-400 hover:text-white transition-colors pixel-border-sm"
               aria-label="Close cart"
@@ -125,21 +127,24 @@ export function CartDrawer({
         </div>
 
         <div className="flex-1 overflow-y-auto px-4 py-3 space-y-3">
-          {items.length === 0 ? (
-            <div className="flex flex-col items-center justify-center h-full gap-4 py-16 text-center">
-              <Package className="w-12 h-12 text-obsidian-600" />
-              <div>
-                <p className="font-pixel text-xs text-gray-500 mb-1">
-                  CART IS EMPTY
-                </p>
-                <p className="font-code text-xs text-gray-600">
-                  Add some merch!
-                </p>
+          <AnimatePresence initial={false}>
+            {items.length === 0 ? (
+              <div
+                key="empty"
+                className="flex flex-col items-center justify-center h-full gap-4 py-16 text-center"
+              >
+                <Package className="w-12 h-12 text-obsidian-600" />
+                <div>
+                  <p className="font-pixel text-xs text-gray-500 mb-1">
+                    CART IS EMPTY
+                  </p>
+                  <p className="font-code text-xs text-gray-600">
+                    Add some merch!
+                  </p>
+                </div>
               </div>
-            </div>
-          ) : (
-            <AnimatePresence initial={false}>
-              {items.map((item) => (
+            ) : (
+              items.map((item) => (
                 <motion.div
                   key={item.variantId}
                   layout
@@ -190,6 +195,7 @@ export function CartDrawer({
                       </span>
                       <div className="flex items-center gap-1">
                         <button
+                          type="button"
                           onClick={() =>
                             onUpdateQty(item.variantId, item.quantity - 1)
                           }
@@ -202,6 +208,7 @@ export function CartDrawer({
                           {item.quantity}
                         </span>
                         <button
+                          type="button"
                           onClick={() =>
                             onUpdateQty(item.variantId, item.quantity + 1)
                           }
@@ -211,6 +218,7 @@ export function CartDrawer({
                           <Plus className="w-3 h-3" />
                         </button>
                         <button
+                          type="button"
                           onClick={() => onRemove(item.variantId)}
                           className="w-6 h-6 flex items-center justify-center bg-obsidian-700 hover:bg-tajin-red/20 text-gray-500 hover:text-tajin-red pixel-border-sm transition-colors ml-1"
                           aria-label="Remove item"
@@ -221,9 +229,9 @@ export function CartDrawer({
                     </div>
                   </div>
                 </motion.div>
-              ))}
-            </AnimatePresence>
-          )}
+              ))
+            )}
+          </AnimatePresence>
         </div>
 
         {items.length > 0 && (
@@ -253,9 +261,10 @@ export function CartDrawer({
             )}
 
             <button
+              type="button"
               onClick={handleCheckout}
               disabled={checkingOut}
-              className="w-full flex items-center justify-center gap-3 py-4 font-pixel text-base tracking-wider transition-all disabled:opacity-70 disabled:cursor-not-allowed"
+              className="w-full flex items-center justify-center gap-3 py-4 font-pixel text-base tracking-wider transition-[filter,opacity] disabled:opacity-70 disabled:cursor-not-allowed"
               style={{
                 background: "linear-gradient(180deg, #5000aa 0%, #28007c 100%)",
                 border: "2px solid #5000aa",

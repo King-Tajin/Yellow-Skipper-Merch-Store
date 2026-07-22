@@ -18,6 +18,7 @@
     "@tailwindcss/postcss": "^4.3.3",
     "@vitejs/plugin-react": "^6.0.3",
     "autoprefixer": "^10.5.4",
+    "dompurify": "^3.4.12",
     "framer-motion": "^12.42.2",
     "lucide-react": "^1.25.0",
     "postcss": "^8.5.20",

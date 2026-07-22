@@ -28,17 +28,20 @@ export async function onRequestPost(context) {
 
   let cartRes, cartText;
   try {
-    cartRes = await fetch(`${FW_BASE}/carts?storefront_token=${context.env.FW_TOKEN}`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        currency,
-        items: items.map((i) => ({
-          variantId: i.variantId,
-          quantity: i.quantity,
-        })),
-      }),
-    });
+    cartRes = await fetch(
+      `${FW_BASE}/carts?storefront_token=${context.env.FW_TOKEN}`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          currency,
+          items: items.map((i) => ({
+            variantId: i.variantId,
+            quantity: i.quantity,
+          })),
+        }),
+      },
+    );
     cartText = await cartRes.text();
   } catch (err) {
     return ok({

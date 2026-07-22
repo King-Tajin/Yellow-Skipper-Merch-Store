@@ -31,6 +31,15 @@ export function ProductCard({
         borderImageSource: "linear-gradient(180deg, #5000aa 0%, #28007c 100%)",
       }}
       onClick={onClick}
+      role="button"
+      tabIndex={0}
+      aria-label={`View details for ${product.name}`}
+      onKeyDown={(e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          onClick();
+        }
+      }}
       whileHover={{ scale: 1.02 }}
       whileTap={{ scale: 0.98 }}
     >
@@ -83,7 +92,7 @@ export function ProductCard({
           </div>
         )}
 
-        <div className="mt-1 w-full flex items-center justify-center gap-1.5 px-3 py-2 bg-crown-gold/10 border border-crown-gold/40 group-hover:bg-crown-gold group-hover:border-crown-gold text-crown-gold group-hover:text-obsidian-900 font-pixel text-xs sm:text-sm transition-all duration-200">
+        <div className="mt-1 w-full flex items-center justify-center gap-1.5 px-3 py-2 bg-crown-gold/10 border border-crown-gold/40 group-hover:bg-crown-gold group-hover:border-crown-gold text-crown-gold group-hover:text-obsidian-900 font-pixel text-xs sm:text-sm transition-colors duration-200">
           <ShoppingBag className="w-3 h-3" />
           VIEW ITEM
         </div>
@@ -91,4 +100,3 @@ export function ProductCard({
     </motion.div>
   );
 }
-

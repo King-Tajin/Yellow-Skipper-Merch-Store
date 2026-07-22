@@ -1,4 +1,4 @@
-import type { CartItem, Currency, FWProduct } from "./types";
+import type { CartItem, Currency, FWCollection, FWProduct } from "./types";
 
 export const SHOP_URL = "https://fourthwall.king-tajin.dev";
 export const HOMEPAGE_URL = "https://king-tajin.dev";
@@ -7,6 +7,7 @@ export const VAGUDLE_URL = "https://vagudle.king-tajin.dev";
 interface StoreResponse {
   totalResults?: number;
   total?: number;
+  paging?: { elementsTotal?: number };
   results?: FWProduct[];
 }
 
@@ -17,25 +18,71 @@ interface CheckoutResponse {
   cartId?: string;
 }
 
-export async function fetchProducts(currency: Currency): Promise<FWProduct[]> {
+export async function fetchProducts(
+  currency: Currency,
+  collection = "all",
+): Promise<FWProduct[]> {
   const pageSize = 50;
-  const firstRes = await fetch(
-    `/api/store?size=${pageSize}&page=0&currency=${currency}`,
-  );
-  if (!firstRes.ok) throw new Error(`HTTP ${firstRes.status}`);
-  const firstJson = (await firstRes.json()) as StoreResponse;
-  const total: number = firstJson.totalResults ?? firstJson.total ?? 0;
+  const fetchPage = async (page: number): Promise<StoreResponse> => {
+    const res = await fetch(
+      `/api/store?size=${pageSize}&page=${page}&currency=${currency}&collection=${collection}`,
+    );
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    return (await res.json()) as StoreResponse;
+  };
+
+  const firstJson = await fetchPage(0);
+  const total: number =
+    firstJson.paging?.elementsTotal ??
+    firstJson.totalResults ??
+    firstJson.total ??
+    0;
   const results: FWProduct[] = firstJson.results ?? [];
   const totalPages = Math.ceil(total / pageSize);
   if (totalPages <= 1) return results;
   const rest = await Promise.all(
     Array.from({ length: totalPages - 1 }, (_, i) =>
-      fetch(`/api/store?size=${pageSize}&page=${i + 1}&currency=${currency}`)
-        .then((r) => {
-          if (!r.ok) throw new Error(`HTTP ${r.status}`);
-          return r.json() as Promise<StoreResponse>;
-        })
-        .then((j) => j.results ?? []),
+      fetchPage(i + 1).then((j) => j.results ?? []),
+    ),
+  );
+  return [...results, ...rest.flat()];
+}
+
+export async function fetchCollections(): Promise<FWCollection[]> {
+  const res = await fetch("/api/collections");
+  if (!res.ok) throw new Error(`HTTP ${res.status}`);
+  return (await res.json()) as FWCollection[];
+}
+
+export async function fetchUnlistedProducts(
+  code: string,
+  currency: Currency,
+): Promise<FWProduct[]> {
+  const pageSize = 50;
+
+  const fetchPage = async (page: number): Promise<StoreResponse> => {
+    const res = await fetch("/api/unlisted", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ code, size: pageSize, page, currency }),
+    });
+    if (res.status === 401) throw new Error("Invalid code");
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    return (await res.json()) as StoreResponse;
+  };
+
+  const firstJson = await fetchPage(0);
+  const total: number =
+    firstJson.paging?.elementsTotal ??
+    firstJson.totalResults ??
+    firstJson.total ??
+    0;
+  const results: FWProduct[] = firstJson.results ?? [];
+  const totalPages = Math.ceil(total / pageSize);
+  if (totalPages <= 1) return results;
+  const rest = await Promise.all(
+    Array.from({ length: totalPages - 1 }, (_, i) =>
+      fetchPage(i + 1).then((j) => j.results ?? []),
     ),
   );
   return [...results, ...rest.flat()];

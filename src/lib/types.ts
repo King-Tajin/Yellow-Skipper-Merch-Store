@@ -30,6 +30,12 @@ export interface FWAdditionalInfo {
   bodyHtml: string;
 }
 
+export interface FWCollection {
+  id: string;
+  name: string;
+  slug: string;
+}
+
 export interface FWProduct {
   id: string;
   name: string;

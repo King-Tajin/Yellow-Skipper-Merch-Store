@@ -4,18 +4,28 @@ import {
   ArrowLeft,
   ChevronDown,
   ExternalLink,
+  Lock,
   RefreshCw,
   ShoppingBag,
   ShoppingCart,
+  Unlock,
 } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
-import { fetchProducts, HOMEPAGE_URL, SHOP_URL, VAGUDLE_URL } from "@/lib/api";
+import type { SubmitEvent } from "react";
+import {
+  fetchCollections,
+  fetchProducts,
+  fetchUnlistedProducts,
+  HOMEPAGE_URL,
+  SHOP_URL,
+  VAGUDLE_URL,
+} from "@/lib/api";
 import { CartDrawer } from "./CartDrawer";
 import { ProductCard } from "./ProductCard";
 import { ProductModal } from "./ProductModal";
 import { SkeletonCard } from "./SkeletonCard";
 import { CURRENCIES } from "@/lib/types";
-import type { CartItem, Currency, FWProduct } from "@/lib/types";
+import type { CartItem, Currency, FWCollection, FWProduct } from "@/lib/types";
 
 export default function StorePage() {
   const [products, setProducts] = useState<FWProduct[]>([]);
@@ -25,6 +35,8 @@ export default function StorePage() {
   const [errorMsg, setErrorMsg] = useState("");
   const [activeProduct, setActiveProduct] = useState<FWProduct | null>(null);
   const [currency, setCurrency] = useState<Currency>("USD");
+  const [collections, setCollections] = useState<FWCollection[]>([]);
+  const [activeCollection, setActiveCollection] = useState("all");
 
   const [cartItems, setCartItems] = useState<CartItem[]>(() => {
     try {
@@ -36,6 +48,14 @@ export default function StorePage() {
   });
   const [cartOpen, setCartOpen] = useState(false);
   const [cartBounce, setCartBounce] = useState(false);
+
+  const [unlockOpen, setUnlockOpen] = useState(false);
+  const [unlockCode, setUnlockCode] = useState("");
+  const [unlockStatus, setUnlockStatus] = useState<
+    "idle" | "loading" | "error" | "success"
+  >("idle");
+  const [unlockError, setUnlockError] = useState("");
+  const [unlistedProducts, setUnlistedProducts] = useState<FWProduct[]>([]);
 
   useEffect(() => {
     try {
@@ -85,7 +105,7 @@ export default function StorePage() {
     setStatus("loading");
     setErrorMsg("");
     try {
-      const data = await fetchProducts(currency);
+      const data = await fetchProducts(currency, activeCollection);
       setProducts(data);
       setStatus("success");
       setActiveProduct((prev) => {
@@ -96,13 +116,46 @@ export default function StorePage() {
       setErrorMsg(err instanceof Error ? err.message : "Unknown error");
       setStatus("error");
     }
-  }, [currency]);
+  }, [currency, activeCollection]);
 
   useEffect(() => {
-    // Fetches products from the network on mount and whenever currency changes so it can't be derived during render.
+    // Fetches products from the network on mount and whenever currency or the selected collection changes.
     // eslint-disable-next-line react-hooks/set-state-in-effect
     void load();
   }, [load]);
+
+  useEffect(() => {
+    fetchCollections()
+      .then((data) => setCollections(data))
+      .catch(() => {});
+  }, []);
+
+  const submitUnlockCode = useCallback(
+    async (e: SubmitEvent) => {
+      e.preventDefault();
+      setUnlockStatus("loading");
+      setUnlockError("");
+      try {
+        const data = await fetchUnlistedProducts(unlockCode, currency);
+        setUnlistedProducts(data);
+        setUnlockStatus("success");
+      } catch (err) {
+        setUnlockError(err instanceof Error ? err.message : "Unknown error");
+        setUnlockStatus("error");
+      }
+    },
+    [unlockCode, currency],
+  );
+
+  useEffect(() => {
+    if (unlockStatus !== "success") return;
+    fetchUnlistedProducts(unlockCode, currency)
+      .then((data) => {
+        setUnlistedProducts(data);
+      })
+      .catch(() => {});
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currency]);
 
   useEffect(() => {
     if (activeProduct) return;
@@ -226,10 +279,85 @@ export default function StorePage() {
             <ExternalLink className="w-6 h-6" />
             <span className="font-pixel text-base">OPEN OLD STORE</span>
           </a>
+
+          <button
+            type="button"
+            onClick={() => setUnlockOpen((v) => !v)}
+            className="flex items-center gap-2.5 px-5 py-3 bg-obsidian-800 pixel-border-sm text-gray-400 hover:text-crown-gold transition-colors"
+          >
+            {unlockStatus === "success" ? (
+              <Unlock className="w-6 h-6" />
+            ) : (
+              <Lock className="w-6 h-6" />
+            )}
+            <span className="font-pixel text-base">
+              {unlockStatus === "success" ? "UNLOCKED" : "HAVE A CODE?"}
+            </span>
+          </button>
         </m.div>
+
+        {unlockOpen && (
+          <m.form
+            initial={{ opacity: 0, y: -8 }}
+            animate={{ opacity: 1, y: 0 }}
+            onSubmit={submitUnlockCode}
+            className="flex flex-wrap items-center justify-center gap-2 mt-3"
+          >
+            <input
+              type="password"
+              value={unlockCode}
+              onChange={(e) => setUnlockCode(e.target.value)}
+              placeholder="Enter code"
+              className="px-4 py-2.5 bg-obsidian-800 pixel-border-sm text-crown-gold font-code text-sm placeholder:text-gray-600 focus:outline-none"
+              autoComplete="off"
+            />
+            <button
+              type="submit"
+              disabled={unlockStatus === "loading" || unlockCode === ""}
+              className="px-4 py-2.5 bg-crown-gold/10 border border-crown-gold/50 hover:border-crown-gold text-crown-gold font-pixel text-xs transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {unlockStatus === "loading" ? "CHECKING..." : "UNLOCK"}
+            </button>
+            {unlockStatus === "error" && (
+              <span className="font-code text-xs text-tajin-red w-full text-center sm:w-auto">
+                {unlockError}
+              </span>
+            )}
+          </m.form>
+        )}
       </div>
 
       <div className="max-w-7xl mx-auto px-3 sm:px-4 py-6 sm:py-8">
+        {collections.length > 0 && (
+          <div className="flex flex-wrap justify-center gap-2 mb-6">
+            <button
+              type="button"
+              onClick={() => setActiveCollection("all")}
+              className={`px-4 py-2 pixel-border-sm font-pixel text-xs transition-colors ${
+                activeCollection === "all"
+                  ? "bg-crown-gold text-obsidian-900"
+                  : "bg-obsidian-800 text-gray-400 hover:text-crown-gold"
+              }`}
+            >
+              ALL
+            </button>
+            {collections.map((c) => (
+              <button
+                key={c.slug}
+                type="button"
+                onClick={() => setActiveCollection(c.slug)}
+                className={`px-4 py-2 pixel-border-sm font-pixel text-xs transition-colors ${
+                  activeCollection === c.slug
+                    ? "bg-crown-gold text-obsidian-900"
+                    : "bg-obsidian-800 text-gray-400 hover:text-crown-gold"
+                }`}
+              >
+                {c.name.toUpperCase()}
+              </button>
+            ))}
+          </div>
+        )}
+
         <AnimatePresence mode="wait">
           {status === "loading" && (
             <m.div
@@ -315,6 +443,42 @@ export default function StorePage() {
             </m.div>
           )}
         </AnimatePresence>
+
+        {unlockStatus === "success" && (
+          <m.div
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="mt-10 sm:mt-12"
+          >
+            <div className="flex items-center gap-2 justify-center mb-4">
+              <Unlock className="w-4 h-4 text-crown-gold" />
+              <h2 className="font-pixel text-base sm:text-lg text-crown-gold">
+                UNLISTED ITEMS
+              </h2>
+            </div>
+            {unlistedProducts.length > 0 ? (
+              <div className="flex flex-wrap justify-center gap-3 sm:gap-4">
+                {unlistedProducts.map((product, i) => (
+                  <div
+                    key={product.id}
+                    className="w-[calc(50%-6px)] sm:w-[calc(33.333%-11px)] lg:w-[calc(25%-12px)]"
+                  >
+                    <ProductCard
+                      product={product}
+                      index={i}
+                      onClick={() => setActiveProduct(product)}
+                      inCart={cartItems.some((c) => c.productId === product.id)}
+                    />
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <p className="font-pixel text-sm text-gray-500 text-center">
+                NO UNLISTED ITEMS FOUND
+              </p>
+            )}
+          </m.div>
+        )}
 
         {status === "success" && products.length > 0 && (
           <m.div

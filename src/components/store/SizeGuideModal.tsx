@@ -1,4 +1,4 @@
-import { motion, AnimatePresence } from "framer-motion";
+import { m, AnimatePresence } from "@/lib/motion";
 import {
   AlertTriangle,
   ChevronDown,
@@ -7,8 +7,8 @@ import {
   X,
 } from "lucide-react";
 import { useState } from "react";
-import { sanitizeProductHtml } from "@/libs/productUtils";
-import type { FWProduct } from "@/libs/types";
+import { sanitizeProductHtml } from "@/lib/productUtils";
+import type { FWProduct } from "@/lib/types";
 
 export function SizeGuideModal({
   open,
@@ -24,7 +24,7 @@ export function SizeGuideModal({
   return (
     <AnimatePresence>
       {open && (
-        <motion.div
+        <m.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
@@ -33,7 +33,7 @@ export function SizeGuideModal({
           style={{ background: "rgba(0,0,0,0.88)" }}
           onClick={() => onClose()}
         >
-          <motion.div
+          <m.div
             initial={{ opacity: 0, scale: 0.92, y: 16 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.92, y: 16 }}
@@ -134,17 +134,17 @@ export function SizeGuideModal({
                   <p className="font-pixel text-xs text-gray-500 tracking-widest">
                     GENERAL REFERENCE — UNISEX
                   </p>
-                  <motion.div
+                  <m.div
                     animate={{ rotate: generalRefOpen ? 180 : 0 }}
                     transition={{ duration: 0.2 }}
                   >
                     <ChevronDown className="w-4 h-4 text-gray-500" />
-                  </motion.div>
+                  </m.div>
                 </button>
 
                 <AnimatePresence initial={false}>
                   {generalRefOpen && (
-                    <motion.div
+                    <m.div
                       key="general-ref"
                       initial={{ height: 0, opacity: 0 }}
                       animate={{ height: "auto", opacity: 1 }}
@@ -229,13 +229,13 @@ export function SizeGuideModal({
                           </div>
                         </div>
                       </div>
-                    </motion.div>
+                    </m.div>
                   )}
                 </AnimatePresence>
               </div>
             </div>
-          </motion.div>
-        </motion.div>
+          </m.div>
+        </m.div>
       )}
     </AnimatePresence>
   );

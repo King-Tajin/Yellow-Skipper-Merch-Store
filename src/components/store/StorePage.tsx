@@ -1,4 +1,4 @@
-import { motion, AnimatePresence } from "framer-motion";
+import { m, AnimatePresence } from "@/lib/motion";
 import {
   AlertTriangle,
   ArrowLeft,
@@ -9,13 +9,13 @@ import {
   ShoppingCart,
 } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
-import { fetchProducts, HOMEPAGE_URL, SHOP_URL, VAGUDLE_URL } from "@/libs/api";
+import { fetchProducts, HOMEPAGE_URL, SHOP_URL, VAGUDLE_URL } from "@/lib/api";
 import { CartDrawer } from "./CartDrawer";
 import { ProductCard } from "./ProductCard";
 import { ProductModal } from "./ProductModal";
 import { SkeletonCard } from "./SkeletonCard";
-import { CURRENCIES } from "@/libs/types";
-import type { CartItem, Currency, FWProduct } from "@/libs/types";
+import { CURRENCIES } from "@/lib/types";
+import type { CartItem, Currency, FWProduct } from "@/lib/types";
 
 export default function StorePage() {
   const [products, setProducts] = useState<FWProduct[]>([]);
@@ -118,26 +118,26 @@ export default function StorePage() {
       <div className="px-3 sm:px-4 pt-4 sm:pt-6 pb-4">
         <div className="flex items-center justify-between flex-wrap mb-4 gap-2">
           <div className="flex items-center flex-wrap gap-2">
-            <motion.a
+            <m.a
               href={VAGUDLE_URL}
               className="flex items-center gap-2 px-3 sm:px-4 py-2 bg-obsidian-800 pixel-border-sm text-crown-gold hover:bg-obsidian-700 transition-colors"
               whileHover={{ x: -4 }}
             >
               <ArrowLeft className="w-5 h-5" />
               <span className="font-pixel text-sm">BACK TO VAGUDLE</span>
-            </motion.a>
+            </m.a>
 
-            <motion.a
+            <m.a
               href={HOMEPAGE_URL}
               className="flex items-center gap-2 px-3 sm:px-4 py-2 bg-obsidian-800 pixel-border-sm text-crown-gold hover:bg-obsidian-700 transition-colors"
               whileHover={{ x: -4 }}
             >
               <ArrowLeft className="w-5 h-5" />
               <span className="font-pixel text-sm">BACK TO HOMEPAGE</span>
-            </motion.a>
+            </m.a>
           </div>
 
-          <motion.button
+          <m.button
             onClick={() => setCartOpen(true)}
             className="flex items-center gap-2 px-4 py-2 bg-obsidian-800 pixel-border-sm text-crown-gold hover:bg-obsidian-700 transition-colors"
             animate={cartBounce ? { scale: [1, 1.2, 0.95, 1.05, 1] } : {}}
@@ -146,19 +146,19 @@ export default function StorePage() {
             <ShoppingCart className="w-5 h-5" />
             <span className="font-pixel text-sm">CART</span>
             {totalCartQty > 0 && (
-              <motion.span
+              <m.span
                 key={totalCartQty}
                 initial={{ scale: 0.6 }}
                 animate={{ scale: 1 }}
                 className="min-w-5.5 h-[h-5.5ex items-center justify-center bg-crown-gold text-obsidian-900 font-pixel text-xs px-1"
               >
                 {totalCartQty}
-              </motion.span>
+              </m.span>
             )}
-          </motion.button>
+          </m.button>
         </div>
 
-        <motion.div
+        <m.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           className="text-center mb-4"
@@ -169,9 +169,9 @@ export default function StorePage() {
           <p className="font-code text-sm sm:text-base text-gray-400">
             Support us with official Yellow Skipper Games merch
           </p>
-        </motion.div>
+        </m.div>
 
-        <motion.div
+        <m.div
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.15 }}
@@ -226,13 +226,13 @@ export default function StorePage() {
             <ExternalLink className="w-6 h-6" />
             <span className="font-pixel text-base">OPEN OLD STORE</span>
           </a>
-        </motion.div>
+        </m.div>
       </div>
 
       <div className="max-w-7xl mx-auto px-3 sm:px-4 py-6 sm:py-8">
         <AnimatePresence mode="wait">
           {status === "loading" && (
-            <motion.div
+            <m.div
               key="skeletons"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -247,11 +247,11 @@ export default function StorePage() {
                   <SkeletonCard />
                 </div>
               ))}
-            </motion.div>
+            </m.div>
           )}
 
           {status === "error" && (
-            <motion.div
+            <m.div
               key="error"
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
@@ -277,11 +277,11 @@ export default function StorePage() {
                 <RefreshCw className="w-3.5 h-3.5" />
                 TRY AGAIN
               </button>
-            </motion.div>
+            </m.div>
           )}
 
           {status === "success" && products.length > 0 && (
-            <motion.div
+            <m.div
               key="products"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -300,11 +300,11 @@ export default function StorePage() {
                   />
                 </div>
               ))}
-            </motion.div>
+            </m.div>
           )}
 
           {status === "success" && products.length === 0 && (
-            <motion.div
+            <m.div
               key="empty"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -312,12 +312,12 @@ export default function StorePage() {
             >
               <ShoppingBag className="w-10 h-10 text-obsidian-600" />
               <p className="font-pixel text-sm text-gray-500">NO ITEMS FOUND</p>
-            </motion.div>
+            </m.div>
           )}
         </AnimatePresence>
 
         {status === "success" && products.length > 0 && (
-          <motion.div
+          <m.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.4 }}
@@ -350,7 +350,7 @@ export default function StorePage() {
                 </a>
               </div>
             </div>
-          </motion.div>
+          </m.div>
         )}
       </div>
 

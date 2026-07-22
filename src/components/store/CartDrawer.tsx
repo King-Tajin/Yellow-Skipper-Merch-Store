@@ -1,4 +1,4 @@
-import { motion, AnimatePresence } from "framer-motion";
+import { m, AnimatePresence } from "@/lib/motion";
 import {
   AlertTriangle,
   ExternalLink,
@@ -12,9 +12,9 @@ import {
   X,
 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
-import { createCheckout } from "@/libs/api";
-import { cartTotal, formatPrice } from "@/libs/productUtils";
-import type { CartItem, Currency } from "@/libs/types";
+import { createCheckout } from "@/lib/api";
+import { cartTotal, formatPrice } from "@/lib/productUtils";
+import type { CartItem, Currency } from "@/lib/types";
 
 export function CartDrawer({
   items,
@@ -63,7 +63,7 @@ export function CartDrawer({
   }
 
   return (
-    <motion.div
+    <m.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
@@ -74,7 +74,7 @@ export function CartDrawer({
         if (e.target === e.currentTarget) onClose();
       }}
     >
-      <motion.div
+      <m.div
         ref={drawerRef}
         initial={{ x: "100%" }}
         animate={{ x: 0 }}
@@ -145,7 +145,7 @@ export function CartDrawer({
               </div>
             ) : (
               items.map((item) => (
-                <motion.div
+                <m.div
                   key={item.variantId}
                   layout
                   initial={{ opacity: 0, x: 40 }}
@@ -228,7 +228,7 @@ export function CartDrawer({
                       </div>
                     </div>
                   </div>
-                </motion.div>
+                </m.div>
               ))
             )}
           </AnimatePresence>
@@ -300,7 +300,7 @@ export function CartDrawer({
             </div>
           </div>
         )}
-      </motion.div>
-    </motion.div>
+      </m.div>
+    </m.div>
   );
 }

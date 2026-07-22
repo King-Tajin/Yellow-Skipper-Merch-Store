@@ -1,4 +1,4 @@
-import { motion, AnimatePresence } from "framer-motion";
+import { m, AnimatePresence } from "@/lib/motion";
 import {
   ChevronDown,
   ChevronLeft,
@@ -13,7 +13,7 @@ import {
 } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import type { ReactElement } from "react";
-import { SHOP_URL } from "@/libs/api";
+import { SHOP_URL } from "@/lib/api";
 import { SizeGuideModal } from "./SizeGuideModal";
 import {
   findVariant,
@@ -21,9 +21,9 @@ import {
   getColorsAndSizes,
   getImagesForVariant,
   sanitizeProductHtml,
-} from "@/libs/productUtils";
-import { CURRENCIES } from "@/libs/types";
-import type { CartItem, Currency, FWProduct } from "@/libs/types";
+} from "@/lib/productUtils";
+import { CURRENCIES } from "@/lib/types";
+import type { CartItem, Currency, FWProduct } from "@/lib/types";
 
 export function ProductModal({
   product,
@@ -109,7 +109,7 @@ export function ProductModal({
 
   return (
     <>
-      <motion.div
+      <m.div
         ref={overlayRef}
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
@@ -121,7 +121,7 @@ export function ProductModal({
           if (e.target === overlayRef.current) onClose();
         }}
       >
-        <motion.div
+        <m.div
           initial={{ opacity: 0, scale: 0.92, y: 24 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0.92, y: 24 }}
@@ -182,7 +182,7 @@ export function ProductModal({
                 <div className="absolute inset-0.75 overflow-hidden">
                   <AnimatePresence mode="wait">
                     {visibleImages[activeImage] ? (
-                      <motion.img
+                      <m.img
                         key={`${selectedColor}-${selectedSize}-${activeImage}`}
                         src={visibleImages[activeImage].url}
                         alt={`${product.name} ${activeImage + 1}`}
@@ -264,7 +264,7 @@ export function ProductModal({
                   {product.name}
                 </h2>
                 <AnimatePresence mode="wait">
-                  <motion.div
+                  <m.div
                     key={activeVariant?.id ?? "none"}
                     initial={{ opacity: 0, y: -4 }}
                     animate={{ opacity: 1, y: 0 }}
@@ -284,7 +284,7 @@ export function ProductModal({
                         SELECT OPTIONS
                       </span>
                     )}
-                  </motion.div>
+                  </m.div>
                 </AnimatePresence>
               </div>
 
@@ -303,16 +303,16 @@ export function ProductModal({
                         <p className="font-pixel text-xs text-gray-500 tracking-widest">
                           DESCRIPTION
                         </p>
-                        <motion.div
+                        <m.div
                           animate={{ rotate: isOpen ? 180 : 0 }}
                           transition={{ duration: 0.2 }}
                         >
                           <ChevronDown className="w-4 h-4 text-gray-500" />
-                        </motion.div>
+                        </m.div>
                       </button>
                       <AnimatePresence initial={false}>
                         {isOpen && (
-                          <motion.div
+                          <m.div
                             key="body"
                             initial={{ height: 0, opacity: 0 }}
                             animate={{ height: "auto", opacity: 1 }}
@@ -329,7 +329,7 @@ export function ProductModal({
                                 ),
                               }}
                             />
-                          </motion.div>
+                          </m.div>
                         )}
                       </AnimatePresence>
                     </div>
@@ -359,16 +359,16 @@ export function ProductModal({
                         <p className="font-pixel text-xs text-gray-500 tracking-widest">
                           {section.title.toUpperCase()}
                         </p>
-                        <motion.div
+                        <m.div
                           animate={{ rotate: isOpen ? 180 : 0 }}
                           transition={{ duration: 0.2 }}
                         >
                           <ChevronDown className="w-4 h-4 text-gray-500" />
-                        </motion.div>
+                        </m.div>
                       </button>
                       <AnimatePresence initial={false}>
                         {isOpen && (
-                          <motion.div
+                          <m.div
                             key="body"
                             initial={{ height: 0, opacity: 0 }}
                             animate={{ height: "auto", opacity: 1 }}
@@ -383,7 +383,7 @@ export function ProductModal({
                                 __html: sanitizeProductHtml(section.bodyHtml),
                               }}
                             />
-                          </motion.div>
+                          </m.div>
                         )}
                       </AnimatePresence>
                     </div>,
@@ -501,7 +501,7 @@ export function ProductModal({
               )}
 
               <div className="mt-auto flex flex-col gap-3 pt-2">
-                <motion.button
+                <m.button
                   type="button"
                   onClick={handleAddToCart}
                   disabled={isOutOfStock || !resolvedVariant}
@@ -526,7 +526,7 @@ export function ProductModal({
                 >
                   <AnimatePresence mode="wait">
                     {addedFlash ? (
-                      <motion.span
+                      <m.span
                         key="added"
                         initial={{ opacity: 0, y: 8 }}
                         animate={{ opacity: 1, y: 0 }}
@@ -534,9 +534,9 @@ export function ProductModal({
                         className="flex items-center gap-2"
                       >
                         ✓ ADDED TO CART
-                      </motion.span>
+                      </m.span>
                     ) : (
-                      <motion.span
+                      <m.span
                         key="add"
                         initial={{ opacity: 0, y: 8 }}
                         animate={{ opacity: 1, y: 0 }}
@@ -545,10 +545,10 @@ export function ProductModal({
                       >
                         <ShoppingCart className="w-6 h-6" />
                         {alreadyInCart ? "ADD ANOTHER" : "ADD TO CART"}
-                      </motion.span>
+                      </m.span>
                     )}
                   </AnimatePresence>
-                </motion.button>
+                </m.button>
 
                 <a
                   href={shopLink}
@@ -582,8 +582,8 @@ export function ProductModal({
               </div>
             </div>
           </div>
-        </motion.div>
-      </motion.div>
+        </m.div>
+      </m.div>
 
       <SizeGuideModal
         open={sizeGuideOpen}

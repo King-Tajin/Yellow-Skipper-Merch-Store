@@ -27,7 +27,7 @@ export default {
       {
         // Backend always responds 200 with a body-level `ok` flag, and the
         // call already has a .catch() fallback for non-JSON responses.
-        files: ["**/src/libs/api.ts"],
+        files: ["**/src/lib/api.ts"],
         rules: ["react-doctor/no-fetch-response-used-without-status-check"],
       },
     ],

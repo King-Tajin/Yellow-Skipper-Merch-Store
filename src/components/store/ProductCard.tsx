@@ -1,7 +1,7 @@
-import { motion } from "framer-motion";
+import { m } from "@/lib/motion";
 import { ShoppingBag, ShoppingCart, Tag } from "lucide-react";
-import { formatPrice } from "@/libs/productUtils";
-import type { FWProduct } from "@/libs/types";
+import { formatPrice } from "@/lib/productUtils";
+import type { FWProduct } from "@/lib/types";
 
 export function ProductCard({
   product,
@@ -19,7 +19,7 @@ export function ProductCard({
   const price = variant?.unitPrice;
 
   return (
-    <motion.div
+    <m.div
       initial={{ opacity: 0, y: 24 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: index * 0.06, duration: 0.35, ease: "easeOut" }}
@@ -97,6 +97,6 @@ export function ProductCard({
           VIEW ITEM
         </div>
       </div>
-    </motion.div>
+    </m.div>
   );
 }

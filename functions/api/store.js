@@ -33,14 +33,18 @@ async function fetchCollectionIds(handle, env) {
 async function fetchNamedCollectionHandles(env, unlistedHandle) {
   try {
     const res = await fetch(
-      `${FW_COLLECTIONS}?storefront_token=${env.FW_TOKEN}`,
+      `${FW_COLLECTIONS}?storefront_token=${env.FW_TOKEN}`
     );
     if (!res.ok) return [];
     const json = await res.json();
     const list = Array.isArray(json) ? json : (json.results ?? []);
-    return list
-      .map((c) => c.slug ?? c.handle ?? "")
-      .filter((h) => h && h !== "all" && h !== unlistedHandle);
+    return list.reduce((handles, c) => {
+      const handle = c.slug ?? c.handle ?? "";
+      if (handle && handle !== "all" && handle !== unlistedHandle) {
+        handles.push(handle);
+      }
+      return handles;
+    }, []);
   } catch {
     return [];
   }
@@ -63,12 +67,12 @@ export async function onRequestGet(context) {
       ? (async () => {
           const namedHandles = await fetchNamedCollectionHandles(
             context.env,
-            unlistedHandle,
+            unlistedHandle
           );
           const idSets = await Promise.all(
             [unlistedHandle, ...namedHandles].map((h) =>
-              fetchCollectionIds(h, context.env),
-            ),
+              fetchCollectionIds(h, context.env)
+            )
           );
           return new Set(idSets.flatMap((s) => [...s]));
         })()
@@ -93,7 +97,7 @@ export async function onRequestGet(context) {
   const json = await fwRes.json();
   const originalResults = json.results ?? [];
   const filteredResults = originalResults.filter(
-    (product) => !excludeIds.has(product.id),
+    (product) => !excludeIds.has(product.id)
   );
   const removed = originalResults.length - filteredResults.length;
   const filtered = {

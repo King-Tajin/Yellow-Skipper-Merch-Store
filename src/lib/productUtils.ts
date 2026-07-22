@@ -27,7 +27,7 @@ export function stripColorStyles(html: string): string {
         .join(";")
         .replace(/;+$/, "");
       return cleaned.trim() ? `${tag}style="${cleaned}"` : tag;
-    },
+    }
   );
 }
 
@@ -50,7 +50,7 @@ export function getColorsAndSizes(variants: FWVariant[]) {
 export function findVariant(
   variants: FWVariant[],
   color: string,
-  size: string,
+  size: string
 ): FWVariant | undefined {
   return variants.find((v) => {
     const vColor = v.attributes?.color?.name ?? "";
@@ -64,7 +64,7 @@ export function findVariant(
 export function getImagesForVariant(
   product: FWProduct,
   color: string,
-  size: string,
+  size: string
 ): FWImage[] {
   const variantImages: FWImage[] = [];
   const seen = new Set<string>();

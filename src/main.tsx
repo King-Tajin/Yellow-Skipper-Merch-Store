@@ -11,5 +11,5 @@ createRoot(document.getElementById("root") as HTMLElement).render(
         <App />
       </MotionConfig>
     </LazyMotion>
-  </React.StrictMode>,
+  </React.StrictMode>
 );

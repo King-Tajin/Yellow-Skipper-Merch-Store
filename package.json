@@ -52,11 +52,11 @@
     "globals": "^17.7.0",
     "husky": "^9.1.7",
     "lint-staged": "^17.1.0",
-    "prettier": "^3.9.5",
+    "prettier": "^3.9.6",
     "react-doctor": "^0.8.1",
     "typescript": "^6.0.3",
     "typescript-7": "npm:typescript@^7.0.2",
-    "typescript-eslint": "^8.64.0",
+    "typescript-eslint": "^8.65.0",
     "wrangler": "^4.112.0"
   },
   "lint-staged": {

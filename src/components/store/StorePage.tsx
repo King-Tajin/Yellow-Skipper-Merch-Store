@@ -30,13 +30,15 @@ import type { CartItem, Currency, FWCollection, FWProduct } from "@/lib/types";
 export default function StorePage() {
   const [products, setProducts] = useState<FWProduct[]>([]);
   const [status, setStatus] = useState<"loading" | "success" | "error">(
-    "loading",
+    "loading"
   );
   const [errorMsg, setErrorMsg] = useState("");
   const [activeProduct, setActiveProduct] = useState<FWProduct | null>(null);
   const [currency, setCurrency] = useState<Currency>("USD");
   const [collections, setCollections] = useState<FWCollection[]>([]);
-  const [activeCollection, setActiveCollection] = useState("all");
+  const [collectionProducts, setCollectionProducts] = useState<
+    Record<string, FWProduct[]>
+  >({});
 
   const [cartItems, setCartItems] = useState<CartItem[]>(() => {
     try {
@@ -72,7 +74,7 @@ export default function StorePage() {
         return prev.map((c) =>
           c.variantId === item.variantId
             ? { ...c, quantity: c.quantity + 1 }
-            : c,
+            : c
         );
       }
       return [...prev, item];
@@ -87,8 +89,8 @@ export default function StorePage() {
     } else {
       setCartItems((prev) =>
         prev.map((c) =>
-          c.variantId === variantId ? { ...c, quantity: qty } : c,
-        ),
+          c.variantId === variantId ? { ...c, quantity: qty } : c
+        )
       );
     }
   }
@@ -105,18 +107,27 @@ export default function StorePage() {
     setStatus("loading");
     setErrorMsg("");
     try {
-      const data = await fetchProducts(currency, activeCollection);
-      setProducts(data);
+      const [uncategorized, perCollection] = await Promise.all([
+        fetchProducts(currency, "all"),
+        Promise.all(collections.map((c) => fetchProducts(currency, c.slug))),
+      ]);
+      setProducts(uncategorized);
+      const nextCollectionProducts: Record<string, FWProduct[]> = {};
+      collections.forEach((c, i) => {
+        nextCollectionProducts[c.slug] = perCollection[i];
+      });
+      setCollectionProducts(nextCollectionProducts);
       setStatus("success");
       setActiveProduct((prev) => {
         if (!prev) return null;
-        return data.find((p) => p.id === prev.id) ?? prev;
+        const all = [uncategorized, ...perCollection].flat();
+        return all.find((p) => p.id === prev.id) ?? prev;
       });
     } catch (err) {
       setErrorMsg(err instanceof Error ? err.message : "Unknown error");
       setStatus("error");
     }
-  }, [currency, activeCollection]);
+  }, [currency, collections]);
 
   useEffect(() => {
     // Fetches products from the network on mount and whenever currency or the selected collection changes.
@@ -144,7 +155,7 @@ export default function StorePage() {
         setUnlockStatus("error");
       }
     },
-    [unlockCode, currency],
+    [unlockCode, currency]
   );
 
   useEffect(() => {
@@ -165,6 +176,10 @@ export default function StorePage() {
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
   }, [activeProduct]);
+
+  const totalProductCount =
+    products.length +
+    Object.values(collectionProducts).reduce((s, arr) => s + arr.length, 0);
 
   return (
     <div className="min-h-dvh bg-obsidian-900 block-pattern">
@@ -232,7 +247,12 @@ export default function StorePage() {
         >
           {status === "success" && (
             <span className="font-code text-sm text-gray-500 w-full text-center sm:w-auto">
-              {products.length} items
+              {products.length +
+                Object.values(collectionProducts).reduce(
+                  (s, arr) => s + arr.length,
+                  0
+                )}{" "}
+              items
             </span>
           )}
           <button
@@ -303,7 +323,14 @@ export default function StorePage() {
             onSubmit={submitUnlockCode}
             className="flex flex-wrap items-center justify-center gap-2 mt-3"
           >
+            <label
+              htmlFor="unlock-code"
+              className="font-pixel text-xs text-gray-400"
+            >
+              CODE:
+            </label>
             <input
+              id="unlock-code"
               type="password"
               value={unlockCode}
               onChange={(e) => setUnlockCode(e.target.value)}
@@ -328,36 +355,6 @@ export default function StorePage() {
       </div>
 
       <div className="max-w-7xl mx-auto px-3 sm:px-4 py-6 sm:py-8">
-        {collections.length > 0 && (
-          <div className="flex flex-wrap justify-center gap-2 mb-6">
-            <button
-              type="button"
-              onClick={() => setActiveCollection("all")}
-              className={`px-4 py-2 pixel-border-sm font-pixel text-xs transition-colors ${
-                activeCollection === "all"
-                  ? "bg-crown-gold text-obsidian-900"
-                  : "bg-obsidian-800 text-gray-400 hover:text-crown-gold"
-              }`}
-            >
-              ALL
-            </button>
-            {collections.map((c) => (
-              <button
-                key={c.slug}
-                type="button"
-                onClick={() => setActiveCollection(c.slug)}
-                className={`px-4 py-2 pixel-border-sm font-pixel text-xs transition-colors ${
-                  activeCollection === c.slug
-                    ? "bg-crown-gold text-obsidian-900"
-                    : "bg-obsidian-800 text-gray-400 hover:text-crown-gold"
-                }`}
-              >
-                {c.name.toUpperCase()}
-              </button>
-            ))}
-          </div>
-        )}
-
         <AnimatePresence mode="wait">
           {status === "loading" && (
             <m.div
@@ -408,30 +405,69 @@ export default function StorePage() {
             </m.div>
           )}
 
-          {status === "success" && products.length > 0 && (
+          {status === "success" && totalProductCount > 0 && (
             <m.div
               key="products"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              className="flex flex-wrap justify-center gap-3 sm:gap-4"
+              className="space-y-10 sm:space-y-12"
             >
-              {products.map((product, i) => (
-                <div
-                  key={product.id}
-                  className="w-[calc(50%-6px)] sm:w-[calc(33.333%-11px)] lg:w-[calc(25%-12px)]"
-                >
-                  <ProductCard
-                    product={product}
-                    index={i}
-                    onClick={() => setActiveProduct(product)}
-                    inCart={cartItems.some((c) => c.productId === product.id)}
-                  />
+              {products.length > 0 && (
+                <div className="flex flex-wrap justify-center gap-3 sm:gap-4">
+                  {products.map((product, i) => (
+                    <div
+                      key={product.id}
+                      className="w-[calc(50%-6px)] sm:w-[calc(33.333%-11px)] lg:w-[calc(25%-12px)]"
+                    >
+                      <ProductCard
+                        product={product}
+                        index={i}
+                        onClick={() => setActiveProduct(product)}
+                        inCart={cartItems.some(
+                          (c) => c.productId === product.id
+                        )}
+                      />
+                    </div>
+                  ))}
                 </div>
-              ))}
+              )}
+
+              {collections.map((c) => {
+                const items = collectionProducts[c.slug] ?? [];
+                if (items.length === 0) return null;
+                return (
+                  <div key={c.slug}>
+                    <div className="flex items-center gap-3 mb-5">
+                      <div className="flex-1 h-px bg-crown-gold/30" />
+                      <h2 className="font-pixel text-sm sm:text-base text-crown-gold whitespace-nowrap">
+                        {c.name.toUpperCase()}
+                      </h2>
+                      <div className="flex-1 h-px bg-crown-gold/30" />
+                    </div>
+                    <div className="flex flex-wrap justify-center gap-3 sm:gap-4">
+                      {items.map((product, i) => (
+                        <div
+                          key={product.id}
+                          className="w-[calc(50%-6px)] sm:w-[calc(33.333%-11px)] lg:w-[calc(25%-12px)]"
+                        >
+                          <ProductCard
+                            product={product}
+                            index={i}
+                            onClick={() => setActiveProduct(product)}
+                            inCart={cartItems.some(
+                              (c) => c.productId === product.id
+                            )}
+                          />
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                );
+              })}
             </m.div>
           )}
 
-          {status === "success" && products.length === 0 && (
+          {status === "success" && totalProductCount === 0 && (
             <m.div
               key="empty"
               initial={{ opacity: 0 }}
@@ -480,7 +516,7 @@ export default function StorePage() {
           </m.div>
         )}
 
-        {status === "success" && products.length > 0 && (
+        {status === "success" && totalProductCount > 0 && (
           <m.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}

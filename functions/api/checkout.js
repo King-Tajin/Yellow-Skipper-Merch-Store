@@ -40,7 +40,7 @@ export async function onRequestPost(context) {
             quantity: i.quantity,
           })),
         }),
-      },
+      }
     );
     cartText = await cartRes.text();
   } catch (err) {

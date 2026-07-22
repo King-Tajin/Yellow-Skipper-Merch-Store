@@ -42,7 +42,7 @@ export function ProductModal({
 }) {
   const { colors, sizes } = useMemo(
     () => getColorsAndSizes(product.variants),
-    [product.variants],
+    [product.variants]
   );
 
   const [selectedColor, setSelectedColor] = useState(colors[0] ?? "");
@@ -54,12 +54,12 @@ export function ProductModal({
 
   const visibleImages = useMemo(
     () => getImagesForVariant(product, selectedColor, selectedSize),
-    [product, selectedColor, selectedSize],
+    [product, selectedColor, selectedSize]
   );
 
   const activeVariant = useMemo(
     () => findVariant(product.variants, selectedColor, selectedSize),
-    [product.variants, selectedColor, selectedSize],
+    [product.variants, selectedColor, selectedSize]
   );
 
   const isSingleVariant = colors.length === 0 && sizes.length === 0;
@@ -215,7 +215,7 @@ export function ProductModal({
                       type="button"
                       onClick={() =>
                         setActiveImage((i) =>
-                          Math.min(visibleImages.length - 1, i + 1),
+                          Math.min(visibleImages.length - 1, i + 1)
                         )
                       }
                       disabled={activeImage === visibleImages.length - 1}
@@ -325,7 +325,7 @@ export function ProductModal({
                               style={{ lineHeight: "1.7" }}
                               dangerouslySetInnerHTML={{
                                 __html: sanitizeProductHtml(
-                                  product.description,
+                                  product.description
                                 ),
                               }}
                             />
@@ -386,11 +386,11 @@ export function ProductModal({
                           </m.div>
                         )}
                       </AnimatePresence>
-                    </div>,
+                    </div>
                   );
                   return acc;
                 },
-                [],
+                []
               )}
 
               {!isSingleVariant && (
@@ -410,10 +410,10 @@ export function ProductModal({
                               ? !!findVariant(product.variants, color, "")
                               : sizes.some(
                                   (s) =>
-                                    !!findVariant(product.variants, color, s),
+                                    !!findVariant(product.variants, color, s)
                                 );
                           const swatch = product.variants.find(
-                            (v) => v.attributes?.color?.name === color,
+                            (v) => v.attributes?.color?.name === color
                           )?.attributes?.color?.swatch;
                           return (
                             <button
@@ -470,7 +470,7 @@ export function ProductModal({
                           const available = !!findVariant(
                             product.variants,
                             selectedColor,
-                            size,
+                            size
                           );
                           return (
                             <button

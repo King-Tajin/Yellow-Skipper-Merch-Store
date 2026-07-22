@@ -31,11 +31,11 @@
         return esc
           .replace(
             /(https?:\/\/[^\s,)<]+)/g,
-            (_, url) => `<a href="${url}">${url}</a>`,
+            (_, url) => `<a href="${url}">${url}</a>`
           )
           .replace(
             /([a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})/g,
-            (_, email) => `<a href="mailto:${email}">${email}</a>`,
+            (_, email) => `<a href="mailto:${email}">${email}</a>`
           );
       }
 
@@ -70,7 +70,7 @@
               out.push(
                 m
                   ? m[1] + "<u>" + linkify(m[2]) + "</u>"
-                  : "<u>" + linked + "</u>",
+                  : "<u>" + linked + "</u>"
               );
               nextIsHeading = false;
             } else {
@@ -84,7 +84,7 @@
       fetch("/terms_of_service.txt")
         .then((r) => r.text())
         .then(
-          (t) => (document.getElementById("content").innerHTML = render(t)),
+          (t) => (document.getElementById("content").innerHTML = render(t))
         );
     </script>
   </body>

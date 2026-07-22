@@ -99,5 +99,5 @@ export default tseslint.config(
     rules: {
       "no-unused-vars": ["warn", { argsIgnorePattern: "^_" }],
     },
-  },
+  }
 );

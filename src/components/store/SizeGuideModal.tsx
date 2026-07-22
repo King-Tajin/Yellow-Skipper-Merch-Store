@@ -70,7 +70,7 @@ export function SizeGuideModal({
             <div className="p-6 flex flex-col gap-4">
               {(() => {
                 const sizeInfo = (product.additionalInformation ?? []).find(
-                  (s) => s.type === "SIZE_AND_FIT",
+                  (s) => s.type === "SIZE_AND_FIT"
                 );
                 if (!sizeInfo) return null;
                 const linkMatch = sizeInfo.bodyHtml.match(/href="([^"]+)"/);
@@ -165,7 +165,7 @@ export function SizeGuideModal({
                                     >
                                       {h}
                                     </th>
-                                  ),
+                                  )
                                 )}
                               </tr>
                             </thead>

@@ -33,6 +33,12 @@ export async function onRequestPost(context) {
   const url = `${FW_BASE}/${handle}/products?storefront_token=${context.env.FW_TOKEN}&size=${size}&page=${page}&currency=${currency}`;
 
   const fwRes = await fetch(url, { method: "GET" });
+
+  if (!fwRes.ok) {
+    const errorBody = await fwRes.text();
+    return new Response(errorBody, { status: fwRes.status, headers: CORS });
+  }
+
   const data = await fwRes.text();
 
   return new Response(data, {

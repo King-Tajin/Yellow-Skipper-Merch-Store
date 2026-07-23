@@ -1,3 +1,6 @@
 FW_TOKEN=your_secret_key_here
 UNLISTED_CODE=your_secret_key_here
 UNLISTED_COLLECTION_HANDLE=your_secret_key_here
+FW_WEBHOOK_SECRET=your_secret_key_here
+DISCORD_WEBHOOK_URL=your_secret_key_here
+DISCORD_WEBHOOK_SECRET=your_secret_key_here

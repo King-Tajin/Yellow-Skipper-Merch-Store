@@ -25,16 +25,16 @@ function timingSafeEqual(a, b) {
 async function verifySignature(rawBody, signature, secret) {
   if (!signature) return false;
   const key = await crypto.subtle.importKey(
-      "raw",
-      new TextEncoder().encode(secret),
-      { name: "HMAC", hash: "SHA-256" },
-      false,
-      ["sign"],
+    "raw",
+    new TextEncoder().encode(secret),
+    { name: "HMAC", hash: "SHA-256" },
+    false,
+    ["sign"]
   );
   const digest = await crypto.subtle.sign(
-      "HMAC",
-      key,
-      new TextEncoder().encode(rawBody),
+    "HMAC",
+    key,
+    new TextEncoder().encode(rawBody)
   );
   return timingSafeEqual(toBase64(digest), signature);
 }
@@ -76,14 +76,14 @@ export async function onRequestPost(context) {
   if (env.FW_WEBHOOK_SECRET) {
     const signature = request.headers.get("X-Fourthwall-Hmac-SHA256");
     const valid = await verifySignature(
-        rawBody,
-        signature,
-        env.FW_WEBHOOK_SECRET,
+      rawBody,
+      signature,
+      env.FW_WEBHOOK_SECRET
     );
     if (!valid) {
       return new Response(
-          JSON.stringify({ ok: false, error: "Invalid signature" }),
-          { status: 401, headers: CORS },
+        JSON.stringify({ ok: false, error: "Invalid signature" }),
+        { status: 401, headers: CORS }
       );
     }
   }
@@ -101,15 +101,15 @@ export async function onRequestPost(context) {
   console.log("Fourthwall webhook received:", JSON.stringify(event));
 
   if (
-      event.type === "ORDER_PLACED" &&
-      event.data?.status === "CONFIRMED" &&
-      env.DISCORD_WEBHOOK_URL
+    event.type === "ORDER_PLACED" &&
+    event.data?.status === "CONFIRMED" &&
+    env.DISCORD_WEBHOOK_URL
   ) {
     try {
       await notifyDiscordBot(
-          event.data,
-          env.DISCORD_WEBHOOK_URL,
-          env.DISCORD_WEBHOOK_SECRET,
+        event.data,
+        env.DISCORD_WEBHOOK_URL,
+        env.DISCORD_WEBHOOK_SECRET
       );
     } catch {
       return new Response(JSON.stringify({ ok: true, discord: false }), {

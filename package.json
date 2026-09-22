@@ -17,16 +17,16 @@
   },
   "dependencies": {
     "@tailwindcss/postcss": "^4.3.3",
-    "@vitejs/plugin-react": "^6.0.3",
-    "autoprefixer": "^10.5.4",
-    "dompurify": "^3.4.12",
-    "framer-motion": "^12.42.2",
-    "lucide-react": "^1.25.0",
-    "postcss": "^8.5.20",
-    "react": "^19.2.7",
-    "react-dom": "^19.2.7",
+    "@vitejs/plugin-react": "^6.1.1",
+    "autoprefixer": "^10.6.1",
+    "dompurify": "^3.4.15",
+    "framer-motion": "^12.43.0",
+    "lucide-react": "^1.47.0",
+    "postcss": "^8.5.28",
+    "react": "^19.3.0",
+    "react-dom": "^19.3.0",
     "tailwindcss": "^4.3.3",
-    "vite": "^8.1.5",
+    "vite": "^8.3.0",
     "vite-plugin-svgr": "^5.2.0"
   },
   "browserslist": {
@@ -43,21 +43,21 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.39.5",
-    "@types/node": "^26.1.1",
-    "@types/react": "^19.2.17",
-    "@types/react-dom": "^19.2.3",
-    "eslint": "^9.39.5",
+    "@types/node": "^26.6.2",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "eslint": "^10.11.0",
     "eslint-plugin-react": "^7.37.5",
     "eslint-plugin-react-hooks": "^7.1.1",
-    "globals": "^17.7.0",
+    "globals": "^17.12.0",
     "husky": "^9.1.7",
-    "lint-staged": "^17.1.0",
-    "prettier": "^3.9.6",
-    "react-doctor": "^0.8.1",
+    "lint-staged": "^17.5.1",
+    "prettier": "^3.9.8",
+    "react-doctor": "^0.8.3",
     "typescript": "^6.0.3",
     "typescript-7": "npm:typescript@^7.0.2",
-    "typescript-eslint": "^8.65.0",
-    "wrangler": "^4.112.0"
+    "typescript-eslint": "^8.70.0",
+    "wrangler": "^4.135.0"
   },
   "lint-staged": {
     "src/**/*.{ts,tsx,js,jsx,css,md}": "prettier --write",
@@ -65,5 +65,5 @@
     "*.{html,json,js,cjs,md}": "prettier --write",
     "public/**/*.{html,json}": "prettier --write"
   },
-  "packageManager": "pnpm@11.15.0+sha512.266f8957a30d2be6e9468e5e66bcdedd35a794175f71b067ba8504d686cce1d0c0f429b33c323c3c569ad4891e667574a49ff71d1b89a22cc66f13c65818c578"
+  "packageManager": "pnpm@12.5.1"
 }

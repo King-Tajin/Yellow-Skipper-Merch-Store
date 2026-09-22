@@ -3,6 +3,9 @@ trustPolicy: no-downgrade
 trustPolicyExclude:
   - 'semver@6.3.1'
 
+overrides:
+  eslint-plugin-react>eslint: "^10.0.0"
+
 allowBuilds:
   esbuild: true
   sharp: true

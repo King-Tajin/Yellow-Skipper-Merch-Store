@@ -1,1 +1,5 @@
+User-agent: *
+Allow: /
+Disallow: /api/
+
 Sitemap: https://store.king-tajin.dev/sitemap.xml

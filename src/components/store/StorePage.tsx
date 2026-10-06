@@ -1,6 +1,5 @@
 import { m, AnimatePresence } from "@/lib/motion";
 import {
-  AlertTriangle,
   ArrowLeft,
   ChevronDown,
   ExternalLink,
@@ -21,9 +20,11 @@ import {
   VAGUDLE_URL,
 } from "@/lib/api";
 import { CartDrawer } from "./CartDrawer";
-import { ProductCard } from "./ProductCard";
+import { ProductGrid } from "./ProductGrid";
 import { ProductModal } from "./ProductModal";
 import { SkeletonCard } from "./SkeletonCard";
+import { StoreError } from "./StoreError";
+import { StoreFooter } from "./StoreFooter";
 import { CURRENCIES } from "@/lib/types";
 import type { CartItem, Currency, FWCollection, FWProduct } from "@/lib/types";
 
@@ -218,7 +219,7 @@ export default function StorePage() {
                 key={totalCartQty}
                 initial={{ scale: 0.6 }}
                 animate={{ scale: 1 }}
-                className="min-w-5.5 h-[h-5.5ex items-center justify-center bg-crown-gold text-obsidian-900 font-pixel text-xs px-1"
+                className="min-w-5.5 h-5.5 flex items-center justify-center bg-crown-gold text-obsidian-900 font-pixel text-xs px-1"
               >
                 {totalCartQty}
               </m.span>
@@ -247,12 +248,7 @@ export default function StorePage() {
         >
           {status === "success" && (
             <span className="font-code text-sm text-gray-500 w-full text-center sm:w-auto">
-              {products.length +
-                Object.values(collectionProducts).reduce(
-                  (s, arr) => s + arr.length,
-                  0
-                )}{" "}
-              items
+              {totalProductCount} items
             </span>
           )}
           <button
@@ -376,33 +372,13 @@ export default function StorePage() {
           )}
 
           {status === "error" && (
-            <m.div
+            <StoreError
               key="error"
-              initial={{ opacity: 0, y: 16 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0 }}
-              className="flex flex-col items-center justify-center py-16 gap-4 text-center"
-            >
-              <AlertTriangle className="w-10 h-10 text-tajin-red" />
-              <div>
-                <p className="font-pixel text-sm text-crown-gold mb-1">
-                  FAILED TO LOAD STORE
-                </p>
-                <p className="font-code text-xs text-gray-500 max-w-sm">
-                  {errorMsg}
-                </p>
-              </div>
-              <button
-                type="button"
-                onClick={() => {
-                  void load();
-                }}
-                className="flex items-center gap-2 px-4 py-2 bg-crown-gold/10 border border-crown-gold/50 hover:border-crown-gold text-crown-gold font-pixel text-xs transition-colors"
-              >
-                <RefreshCw className="w-3.5 h-3.5" />
-                TRY AGAIN
-              </button>
-            </m.div>
+              message={errorMsg}
+              onRetry={() => {
+                void load();
+              }}
+            />
           )}
 
           {status === "success" && totalProductCount > 0 && (
@@ -413,23 +389,11 @@ export default function StorePage() {
               className="space-y-10 sm:space-y-12"
             >
               {products.length > 0 && (
-                <div className="flex flex-wrap justify-center gap-3 sm:gap-4">
-                  {products.map((product, i) => (
-                    <div
-                      key={product.id}
-                      className="w-[calc(50%-6px)] sm:w-[calc(33.333%-11px)] lg:w-[calc(25%-12px)]"
-                    >
-                      <ProductCard
-                        product={product}
-                        index={i}
-                        onClick={() => setActiveProduct(product)}
-                        inCart={cartItems.some(
-                          (c) => c.productId === product.id
-                        )}
-                      />
-                    </div>
-                  ))}
-                </div>
+                <ProductGrid
+                  products={products}
+                  cartItems={cartItems}
+                  onSelect={setActiveProduct}
+                />
               )}
 
               {collections.map((c) => {
@@ -444,23 +408,11 @@ export default function StorePage() {
                       </h2>
                       <div className="flex-1 h-px bg-crown-gold/30" />
                     </div>
-                    <div className="flex flex-wrap justify-center gap-3 sm:gap-4">
-                      {items.map((product, i) => (
-                        <div
-                          key={product.id}
-                          className="w-[calc(50%-6px)] sm:w-[calc(33.333%-11px)] lg:w-[calc(25%-12px)]"
-                        >
-                          <ProductCard
-                            product={product}
-                            index={i}
-                            onClick={() => setActiveProduct(product)}
-                            inCart={cartItems.some(
-                              (c) => c.productId === product.id
-                            )}
-                          />
-                        </div>
-                      ))}
-                    </div>
+                    <ProductGrid
+                      products={items}
+                      cartItems={cartItems}
+                      onSelect={setActiveProduct}
+                    />
                   </div>
                 );
               })}
@@ -493,21 +445,11 @@ export default function StorePage() {
               </h2>
             </div>
             {unlistedProducts.length > 0 ? (
-              <div className="flex flex-wrap justify-center gap-3 sm:gap-4">
-                {unlistedProducts.map((product, i) => (
-                  <div
-                    key={product.id}
-                    className="w-[calc(50%-6px)] sm:w-[calc(33.333%-11px)] lg:w-[calc(25%-12px)]"
-                  >
-                    <ProductCard
-                      product={product}
-                      index={i}
-                      onClick={() => setActiveProduct(product)}
-                      inCart={cartItems.some((c) => c.productId === product.id)}
-                    />
-                  </div>
-                ))}
-              </div>
+              <ProductGrid
+                products={unlistedProducts}
+                cartItems={cartItems}
+                onSelect={setActiveProduct}
+              />
             ) : (
               <p className="font-pixel text-sm text-gray-500 text-center">
                 NO UNLISTED ITEMS FOUND
@@ -516,42 +458,7 @@ export default function StorePage() {
           </m.div>
         )}
 
-        {status === "success" && totalProductCount > 0 && (
-          <m.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.4 }}
-            className="mt-8 sm:mt-10 text-center"
-          >
-            <div className="inline-block p-3 sm:p-4 bg-obsidian-800/50 pixel-border-sm">
-              <div className="flex items-center justify-center gap-2 mb-2">
-                <div className="w-2 h-2 bg-tajin-red" />
-                <div className="w-2 h-2 bg-crown-gold" />
-                <div className="w-2 h-2 bg-tajin-lime" />
-              </div>
-              <p className="font-pixel text-[10px] sm:text-xs text-gray-500 mb-1">
-                Powered by Fourthwall • Merch delivered worldwide
-              </p>
-              <p className="font-code text-[9px] sm:text-[10px] text-gray-600">
-                Secure checkout • Click any item to view details
-              </p>
-              <div className="flex items-center justify-center gap-3 mt-2">
-                <a
-                  href="/privacy.html"
-                  className="font-code text-[9px] sm:text-[10px] text-gray-600 hover:text-crown-gold transition-colors underline"
-                >
-                  Privacy Policy
-                </a>
-                <a
-                  href="/terms.html"
-                  className="font-code text-[9px] sm:text-[10px] text-gray-600 hover:text-crown-gold transition-colors underline"
-                >
-                  Terms of Service
-                </a>
-              </div>
-            </div>
-          </m.div>
-        )}
+        {status === "success" && totalProductCount > 0 && <StoreFooter />}
       </div>
 
       <AnimatePresence>

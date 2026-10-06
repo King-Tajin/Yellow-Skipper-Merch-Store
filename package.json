@@ -5,10 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build:watch": "vite build --watch",
     "pages:dev": "wrangler pages dev --live-reload",
     "build": "vite build",
-    "preview": "vite preview",
     "typecheck": "node ./node_modules/typescript-7/bin/tsc --noEmit",
     "lint": "eslint . --cache --cache-location .eslintcache --cache-strategy content",
     "format": "prettier --write \"src/**/*.{ts,tsx,js,jsx,css,md}\" \"functions/**/*.js\" \"*.{html,json,js,cjs,md}\" \"public/**/*.{html,json}\"",
@@ -21,7 +19,7 @@
     "autoprefixer": "^10.6.1",
     "dompurify": "^3.4.16",
     "framer-motion": "^12.43.0",
-    "lucide-react": "^1.51.0",
+    "lucide-react": "^1.52.0",
     "postcss": "^8.5.28",
     "react": "^19.3.0",
     "react-dom": "^19.3.0",
@@ -42,7 +40,8 @@
     ]
   },
   "devDependencies": {
-    "@eslint/js": "^9.39.5",
+    "@eslint/compat": "^2.1.1",
+    "@eslint/js": "^10.0.1",
     "@types/node": "^26.6.4",
     "@types/react": "^19.3.0",
     "@types/react-dom": "^19.3.0",

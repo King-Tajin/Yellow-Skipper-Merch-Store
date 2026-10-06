@@ -3,6 +3,7 @@ import globals from "globals";
 import tseslint from "typescript-eslint";
 import reactPlugin from "eslint-plugin-react";
 import reactHooks from "eslint-plugin-react-hooks";
+import { fixupPluginRules } from "@eslint/compat";
 
 // noinspection JSCheckFunctionSignatures
 export default tseslint.config(
@@ -23,7 +24,7 @@ export default tseslint.config(
       },
     },
     plugins: {
-      react: reactPlugin,
+      react: fixupPluginRules(reactPlugin),
       "react-hooks": reactHooks,
     },
     rules: {

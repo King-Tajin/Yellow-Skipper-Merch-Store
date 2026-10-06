@@ -239,7 +239,7 @@ export function ProductModal({
                       type="button"
                       onClick={() => setActiveImage(i)}
                       aria-label={`View image ${i + 1}`}
-                      className={`relative w-18.25 hh-18.25flex-shrink-0 transition-all pixel-border-sm ${
+                      className={`relative w-18.25 h-18.25 shrink-0 transition-all pixel-border-sm ${
                         i === activeImage
                           ? "ring-2 ring-crown-gold ring-offset-1 ring-offset-obsidian-900"
                           : "opacity-50 hover:opacity-80"

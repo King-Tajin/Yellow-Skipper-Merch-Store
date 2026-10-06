@@ -12,5 +12,5 @@ allowBuilds:
   workerd: true
 
 minimumReleaseAgeExclude:
-  - lint-staged@17.1.0
-  - react-doctor@0.8.1
+  - lint-staged
+  - react-doctor

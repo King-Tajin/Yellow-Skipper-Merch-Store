@@ -5,6 +5,7 @@ import {
   ChevronRight,
   Crown,
   ExternalLink,
+  Maximize2,
   Ruler,
   ShoppingBag,
   ShoppingCart,
@@ -14,6 +15,7 @@ import {
 import { useEffect, useMemo, useRef, useState } from "react";
 import type { ReactElement } from "react";
 import { SHOP_URL } from "@/lib/api";
+import { ImageLightbox } from "./ImageLightbox";
 import { SizeGuideModal } from "./SizeGuideModal";
 import {
   findVariant,
@@ -51,6 +53,7 @@ export function ProductModal({
   const [addedFlash, setAddedFlash] = useState(false);
   const [descExpanded, setDescExpanded] = useState<string | null>(null);
   const [sizeGuideOpen, setSizeGuideOpen] = useState(false);
+  const [lightboxOpen, setLightboxOpen] = useState(false);
 
   const visibleImages = useMemo(
     () => getImagesForVariant(product, selectedColor, selectedSize),
@@ -74,7 +77,10 @@ export function ProductModal({
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") onClose();
+      if (e.key === "Escape") {
+        if (lightboxOpen) setLightboxOpen(false);
+        else onClose();
+      }
       if (e.key === "ArrowLeft") setActiveImage((i) => Math.max(0, i - 1));
       if (e.key === "ArrowRight")
         setActiveImage((i) => Math.min(visibleImages.length - 1, i + 1));
@@ -85,7 +91,7 @@ export function ProductModal({
       window.removeEventListener("keydown", onKey);
       document.body.style.overflow = "";
     };
-  }, [onClose, visibleImages.length]);
+  }, [onClose, visibleImages.length, lightboxOpen]);
 
   const isOutOfStock = !isSingleVariant && !activeVariant;
 
@@ -199,6 +205,17 @@ export function ProductModal({
                     )}
                   </AnimatePresence>
                 </div>
+
+                {visibleImages[activeImage] && (
+                  <button
+                    type="button"
+                    onClick={() => setLightboxOpen(true)}
+                    aria-label="View image full screen"
+                    className="absolute right-2 top-2 p-1.5 bg-obsidian-900/80 pixel-border-sm text-crown-gold hover:bg-obsidian-700 transition-colors z-10"
+                  >
+                    <Maximize2 className="w-4 h-4" />
+                  </button>
+                )}
 
                 {visibleImages.length > 1 && (
                   <>
@@ -584,6 +601,20 @@ export function ProductModal({
           </div>
         </m.div>
       </m.div>
+
+      <AnimatePresence>
+        {lightboxOpen && visibleImages[activeImage] && (
+          <ImageLightbox
+            key="lightbox"
+            images={visibleImages}
+            activeImage={activeImage}
+            imageKey={`lightbox-${selectedColor}-${selectedSize}-${activeImage}`}
+            alt={`${product.name} ${activeImage + 1}`}
+            onChange={setActiveImage}
+            onClose={() => setLightboxOpen(false)}
+          />
+        )}
+      </AnimatePresence>
 
       <SizeGuideModal
         open={sizeGuideOpen}

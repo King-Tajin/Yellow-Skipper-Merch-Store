@@ -41,7 +41,7 @@ export function CollapsibleSection({
             style={{ overflow: "hidden" }}
           >
             <div
-              className="font-code text-sm text-gray-300 leading-relaxed px-4 pb-4 prose-sm"
+              className="font-code text-sm text-gray-300 leading-relaxed px-4 pb-4 prose-sm product-description"
               style={{ lineHeight: "1.7" }}
               dangerouslySetInnerHTML={{ __html: sanitizeProductHtml(html) }}
             />

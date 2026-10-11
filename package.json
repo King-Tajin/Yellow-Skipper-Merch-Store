@@ -1,6 +1,5 @@
 {
   "name": "yellow-skipper-games-merch",
-  "version": "1.0.0",
   "private": true,
   "type": "module",
   "scripts": {
@@ -64,5 +63,5 @@
     "*.{html,json,js,cjs,md}": "prettier --write",
     "public/**/*.{html,json}": "prettier --write"
   },
-  "packageManager": "pnpm@12.9.1"
+  "packageManager": "pnpm@12.11.2"
 }

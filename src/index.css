@@ -57,3 +57,15 @@ body {
     linear-gradient(rgba(255, 215, 0, 0.05) 1px, transparent 1px);
   background-size: 16px 16px;
 }
+
+.product-description a,
+.product-description a * {
+  color: #ffd700 !important;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.product-description a:hover,
+.product-description a:hover * {
+  color: #ffbf00 !important;
+}

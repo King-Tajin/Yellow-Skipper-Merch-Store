@@ -141,7 +141,7 @@ export function ProductModal({
           }}
         >
           <div
-            className="sticky top-0 z-10 flex items-center justify-between px-6 sm:px-8 py-5 border-b-2 border-obsidian-700"
+            className="sticky top-0 z-20 flex items-center justify-between px-6 sm:px-8 py-5 border-b-2 border-obsidian-700"
             style={{ background: "rgba(10,0,20,0.97)" }}
           >
             <div className="flex items-center gap-3">

@@ -1,5 +1,6 @@
 import { m, AnimatePresence } from "@/lib/motion";
 import {
+  Ban,
   ChevronDown,
   Crown,
   ExternalLink,
@@ -19,6 +20,7 @@ import {
   formatPrice,
   getColorsAndSizes,
   getImagesForVariant,
+  isVariantSoldOut,
 } from "@/lib/productUtils";
 import { CURRENCIES } from "@/lib/types";
 import type { CartItem, Currency, FWProduct } from "@/lib/types";
@@ -43,8 +45,15 @@ export function ProductModal({
     [product.variants]
   );
 
-  const [selectedColor, setSelectedColor] = useState(colors[0] ?? "");
-  const [selectedSize, setSelectedSize] = useState(sizes[0] ?? "");
+  const firstInStock = product.variants.find((v) => !isVariantSoldOut(v));
+  const initialVariant = firstInStock ?? product.variants[0];
+
+  const [selectedColor, setSelectedColor] = useState(
+    initialVariant?.attributes?.color?.name ?? colors[0] ?? ""
+  );
+  const [selectedSize, setSelectedSize] = useState(
+    initialVariant?.attributes?.size?.name ?? sizes[0] ?? ""
+  );
   const [activeImage, setActiveImage] = useState(0);
   const [addedFlash, setAddedFlash] = useState(false);
   const [descExpanded, setDescExpanded] = useState<string | null>(null);
@@ -89,7 +98,8 @@ export function ProductModal({
     };
   }, [onClose, visibleImages.length, lightboxOpen]);
 
-  const isOutOfStock = !isSingleVariant && !activeVariant;
+  const isOutOfStock =
+    (!isSingleVariant && !activeVariant) || isVariantSoldOut(resolvedVariant);
 
   function toggleSection(key: string) {
     setDescExpanded((prev) => (prev === key ? null : key));
@@ -208,10 +218,24 @@ export function ProductModal({
                   >
                     {resolvedVariant?.unitPrice ? (
                       <>
-                        <Tag className="w-7 h-7 text-tajin-lime" />
-                        <span className="font-pixel text-4xl text-tajin-lime">
+                        <Tag
+                          className={`w-7 h-7 ${isOutOfStock ? "text-gray-500" : "text-tajin-lime"}`}
+                        />
+                        <span
+                          className={`font-pixel text-4xl ${
+                            isOutOfStock
+                              ? "text-gray-500 line-through"
+                              : "text-tajin-lime"
+                          }`}
+                        >
                           {formatPrice(resolvedVariant.unitPrice)}
                         </span>
+                        {isOutOfStock && (
+                          <span className="flex items-center gap-1.5 px-3 py-1 font-pixel text-sm text-white bg-red-700">
+                            <Ban className="w-4 h-4" />
+                            SOLD OUT
+                          </span>
+                        )}
                       </>
                     ) : (
                       <span className="font-pixel text-xl text-gray-500">
@@ -266,6 +290,18 @@ export function ProductModal({
                                   (s) =>
                                     !!findVariant(product.variants, color, s)
                                 );
+                          const colorSoldOut =
+                            available &&
+                            (sizes.length === 0
+                              ? isVariantSoldOut(
+                                  findVariant(product.variants, color, "")
+                                )
+                              : sizes
+                                  .map((s) =>
+                                    findVariant(product.variants, color, s)
+                                  )
+                                  .filter((v) => !!v)
+                                  .every((v) => isVariantSoldOut(v)));
                           const swatch = product.variants.find(
                             (v) => v.attributes?.color?.name === color
                           )?.attributes?.color?.swatch;
@@ -282,7 +318,7 @@ export function ProductModal({
                                 selectedColor === color
                                   ? "bg-crown-gold/20 text-crown-gold"
                                   : "bg-obsidian-800 text-gray-400 hover:text-gray-200"
-                              }`}
+                              } ${colorSoldOut ? "opacity-50 line-through" : ""}`}
                               style={{
                                 border: `2px solid ${selectedColor === color ? "#d4af37" : "#3a3a4a"}`,
                               }}
@@ -321,11 +357,14 @@ export function ProductModal({
                       </div>
                       <div className="flex flex-wrap gap-2">
                         {sizes.map((size) => {
-                          const available = !!findVariant(
+                          const sizeVariant = findVariant(
                             product.variants,
                             selectedColor,
                             size
                           );
+                          const available = !!sizeVariant;
+                          const sizeSoldOut =
+                            available && isVariantSoldOut(sizeVariant);
                           return (
                             <button
                               key={size}
@@ -339,7 +378,7 @@ export function ProductModal({
                                 selectedSize === size
                                   ? "bg-crown-gold/20 text-crown-gold"
                                   : "bg-obsidian-800 text-gray-400 hover:text-gray-200"
-                              }`}
+                              } ${sizeSoldOut ? "opacity-50 line-through" : ""}`}
                               style={{
                                 border: `2px solid ${selectedSize === size ? "#d4af37" : "#3a3a4a"}`,
                               }}
@@ -362,16 +401,22 @@ export function ProductModal({
                   whileTap={{ scale: 0.97 }}
                   className="w-full flex items-center justify-center gap-3 py-4 font-pixel text-xl tracking-wider transition-all relative overflow-hidden disabled:opacity-50 disabled:cursor-not-allowed"
                   style={{
-                    background: addedFlash
-                      ? "linear-gradient(180deg, #3a7d44 0%, #2d6135 100%)"
-                      : "linear-gradient(180deg, #d4af37 0%, #a07820 100%)",
-                    border: `2px solid ${addedFlash ? "#3a7d44" : "#d4af37"}`,
-                    color: addedFlash ? "#fff" : "#100010",
+                    background: isOutOfStock
+                      ? "linear-gradient(180deg, #4a1010 0%, #2a0808 100%)"
+                      : addedFlash
+                        ? "linear-gradient(180deg, #3a7d44 0%, #2d6135 100%)"
+                        : "linear-gradient(180deg, #d4af37 0%, #a07820 100%)",
+                    border: `2px solid ${isOutOfStock ? "#b91c1c" : addedFlash ? "#3a7d44" : "#d4af37"}`,
+                    color: isOutOfStock
+                      ? "#f87171"
+                      : addedFlash
+                        ? "#fff"
+                        : "#100010",
                     transition:
                       "background 0.3s, border-color 0.3s, color 0.3s",
                   }}
                   onMouseEnter={(e) => {
-                    if (!addedFlash)
+                    if (!addedFlash && !isOutOfStock)
                       e.currentTarget.style.filter = "brightness(1.12)";
                   }}
                   onMouseLeave={(e) => {
@@ -379,7 +424,18 @@ export function ProductModal({
                   }}
                 >
                   <AnimatePresence mode="wait">
-                    {addedFlash ? (
+                    {isOutOfStock ? (
+                      <m.span
+                        key="soldout"
+                        initial={{ opacity: 0, y: 8 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -8 }}
+                        className="flex items-center gap-3"
+                      >
+                        <Ban className="w-6 h-6" />
+                        SOLD OUT
+                      </m.span>
+                    ) : addedFlash ? (
                       <m.span
                         key="added"
                         initial={{ opacity: 0, y: 8 }}

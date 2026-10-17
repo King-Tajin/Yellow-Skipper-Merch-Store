@@ -16,12 +16,20 @@ export interface FWVariantAttributes {
   size?: { name: string };
 }
 
+export type FWStock =
+  { type: "LIMITED"; inStock: number } | { type: "UNLIMITED" };
+
+export interface FWProductState {
+  type: "AVAILABLE" | "SOLD_OUT";
+}
+
 export interface FWVariant {
   id: string;
   name: string;
   unitPrice: FWPrice;
   attributes?: FWVariantAttributes;
   images?: FWImage[];
+  stock?: FWStock;
 }
 
 export interface FWAdditionalInfo {
@@ -43,6 +51,7 @@ export interface FWProduct {
   description?: string;
   additionalInformation?: FWAdditionalInfo[];
   sizeGuide?: string | null;
+  state?: FWProductState;
   images: FWImage[];
   variants: FWVariant[];
 }

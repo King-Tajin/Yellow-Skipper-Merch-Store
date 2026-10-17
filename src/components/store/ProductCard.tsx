@@ -1,6 +1,6 @@
 import { m } from "@/lib/motion";
-import { ShoppingBag, ShoppingCart, Tag } from "lucide-react";
-import { formatPrice } from "@/lib/productUtils";
+import { Ban, ShoppingBag, ShoppingCart, Tag } from "lucide-react";
+import { formatPrice, isProductSoldOut } from "@/lib/productUtils";
 import type { FWProduct } from "@/lib/types";
 
 export function ProductCard({
@@ -17,6 +17,7 @@ export function ProductCard({
   const image = product.images[0];
   const variant = product.variants[0];
   const price = variant?.unitPrice;
+  const soldOut = isProductSoldOut(product);
 
   return (
     <m.div
@@ -43,8 +44,18 @@ export function ProductCard({
       whileHover={{ scale: 1.02 }}
       whileTap={{ scale: 0.98 }}
     >
+      {soldOut && (
+        <div className="absolute top-2 left-2 z-10 flex items-center gap-1 px-2 py-1 font-pixel text-[9px] text-white bg-red-700">
+          <Ban className="w-2.5 h-2.5" />
+          SOLD OUT
+        </div>
+      )}
       {inCart && (
-        <div className="absolute top-2 left-2 z-10 flex items-center gap-1 px-2 py-1 font-pixel text-[9px] text-obsidian-900 bg-crown-gold">
+        <div
+          className={`absolute left-2 z-10 flex items-center gap-1 px-2 py-1 font-pixel text-[9px] text-obsidian-900 bg-crown-gold ${
+            soldOut ? "top-9" : "top-2"
+          }`}
+        >
           <ShoppingCart className="w-2.5 h-2.5" />
           IN CART
         </div>
@@ -56,7 +67,9 @@ export function ProductCard({
             <img
               src={image.url}
               alt={product.name}
-              className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+              className={`w-full h-full object-cover transition-transform duration-500 group-hover:scale-105 ${
+                soldOut ? "grayscale opacity-50" : ""
+              }`}
               loading="lazy"
             />
           ) : (
@@ -86,16 +99,27 @@ export function ProductCard({
         {price && (
           <div className="flex items-center gap-1.5">
             <Tag className="w-3 h-3 text-tajin-lime shrink-0" />
-            <span className="font-code text-xs sm:text-sm text-tajin-lime font-semibold">
+            <span
+              className={`font-code text-xs sm:text-sm font-semibold ${
+                soldOut ? "text-gray-500 line-through" : "text-tajin-lime"
+              }`}
+            >
               {formatPrice(price)}
             </span>
           </div>
         )}
 
-        <div className="mt-1 w-full flex items-center justify-center gap-1.5 px-3 py-2 bg-crown-gold/10 border border-crown-gold/40 group-hover:bg-crown-gold group-hover:border-crown-gold text-crown-gold group-hover:text-obsidian-900 font-pixel text-xs sm:text-sm transition-colors duration-200">
-          <ShoppingBag className="w-3 h-3" />
-          VIEW ITEM
-        </div>
+        {soldOut ? (
+          <div className="mt-1 w-full flex items-center justify-center gap-1.5 px-3 py-2 bg-red-900/20 border border-red-700/50 text-red-400 font-pixel text-xs sm:text-sm">
+            <Ban className="w-3 h-3" />
+            SOLD OUT
+          </div>
+        ) : (
+          <div className="mt-1 w-full flex items-center justify-center gap-1.5 px-3 py-2 bg-crown-gold/10 border border-crown-gold/40 group-hover:bg-crown-gold group-hover:border-crown-gold text-crown-gold group-hover:text-obsidian-900 font-pixel text-xs sm:text-sm transition-colors duration-200">
+            <ShoppingBag className="w-3 h-3" />
+            VIEW ITEM
+          </div>
+        )}
       </div>
     </m.div>
   );

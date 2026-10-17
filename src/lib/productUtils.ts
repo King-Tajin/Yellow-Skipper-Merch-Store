@@ -35,6 +35,19 @@ export function sanitizeProductHtml(html: string): string {
   return DOMPurify.sanitize(stripColorStyles(html));
 }
 
+export function isVariantSoldOut(variant: FWVariant | undefined): boolean {
+  if (!variant) return true;
+  const stock = variant.stock;
+  return stock?.type === "LIMITED" && stock.inStock <= 0;
+}
+
+export function isProductSoldOut(product: FWProduct): boolean {
+  if (product.state?.type === "SOLD_OUT") return true;
+  return (
+    product.variants.length > 0 && product.variants.every(isVariantSoldOut)
+  );
+}
+
 export function getColorsAndSizes(variants: FWVariant[]) {
   const colorSet = new Set<string>();
   const sizeSet = new Set<string>();

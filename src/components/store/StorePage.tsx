@@ -20,6 +20,7 @@ import {
   VAGUDLE_URL,
 } from "@/lib/api";
 import { CartDrawer } from "./CartDrawer";
+import { DonationNotice } from "./DonationNotice";
 import { ProductGrid } from "./ProductGrid";
 import { ProductModal } from "./ProductModal";
 import { SkeletonCard } from "./SkeletonCard";
@@ -238,6 +239,7 @@ export default function StorePage() {
           <p className="font-code text-sm sm:text-base text-gray-400">
             Support us with official Yellow Skipper Games merch
           </p>
+          <DonationNotice />
         </m.div>
 
         <m.div

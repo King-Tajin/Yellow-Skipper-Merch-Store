@@ -18,12 +18,12 @@
     "autoprefixer": "^10.6.1",
     "dompurify": "^3.4.17",
     "framer-motion": "^12.43.0",
-    "lucide-react": "^1.59.0",
-    "postcss": "^8.5.30",
+    "lucide-react": "^1.61.0",
+    "postcss": "^8.5.31",
     "react": "^19.3.1",
     "react-dom": "^19.3.1",
     "tailwindcss": "^4.3.3",
-    "vite": "^8.3.4",
+    "vite": "^8.3.5",
     "vite-plugin-svgr": "^5.2.0"
   },
   "browserslist": {
@@ -54,8 +54,8 @@
     "react-doctor": "^0.8.3",
     "typescript": "^6.0.3",
     "typescript-7": "npm:typescript@^7.0.2",
-    "typescript-eslint": "^8.71.2",
-    "wrangler": "^4.151.1"
+    "typescript-eslint": "^8.72.0",
+    "wrangler": "^4.151.3"
   },
   "lint-staged": {
     "src/**/*.{ts,tsx,js,jsx,css,md}": "prettier --write",

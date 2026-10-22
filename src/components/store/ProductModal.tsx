@@ -45,7 +45,9 @@ export function ProductModal({
     [product.variants]
   );
 
-  const firstInStock = product.variants.find((v) => !isVariantSoldOut(v));
+  const firstInStock = product.variants.find(
+    (v) => !isVariantSoldOut(v, product)
+  );
   const initialVariant = firstInStock ?? product.variants[0];
 
   const [selectedColor, setSelectedColor] = useState(
@@ -99,7 +101,8 @@ export function ProductModal({
   }, [onClose, visibleImages.length, lightboxOpen]);
 
   const isOutOfStock =
-    (!isSingleVariant && !activeVariant) || isVariantSoldOut(resolvedVariant);
+    (!isSingleVariant && !activeVariant) ||
+    isVariantSoldOut(resolvedVariant, product);
 
   function toggleSection(key: string) {
     setDescExpanded((prev) => (prev === key ? null : key));
@@ -294,14 +297,15 @@ export function ProductModal({
                             available &&
                             (sizes.length === 0
                               ? isVariantSoldOut(
-                                  findVariant(product.variants, color, "")
+                                  findVariant(product.variants, color, ""),
+                                  product
                                 )
                               : sizes
                                   .map((s) =>
                                     findVariant(product.variants, color, s)
                                   )
                                   .filter((v) => !!v)
-                                  .every((v) => isVariantSoldOut(v)));
+                                  .every((v) => isVariantSoldOut(v, product)));
                           const swatch = product.variants.find(
                             (v) => v.attributes?.color?.name === color
                           )?.attributes?.color?.swatch;
@@ -364,7 +368,7 @@ export function ProductModal({
                           );
                           const available = !!sizeVariant;
                           const sizeSoldOut =
-                            available && isVariantSoldOut(sizeVariant);
+                            available && isVariantSoldOut(sizeVariant, product);
                           return (
                             <button
                               key={size}

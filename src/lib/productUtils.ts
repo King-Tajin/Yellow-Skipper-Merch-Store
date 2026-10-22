@@ -35,16 +35,21 @@ export function sanitizeProductHtml(html: string): string {
   return DOMPurify.sanitize(stripColorStyles(html));
 }
 
-export function isVariantSoldOut(variant: FWVariant | undefined): boolean {
+export function isVariantSoldOut(
+  variant: FWVariant | undefined,
+  product?: FWProduct
+): boolean {
   if (!variant) return true;
+  if (product?.state?.type === "SOLD_OUT") return true;
   const stock = variant.stock;
-  return stock?.type === "LIMITED" && stock.inStock <= 0;
+  return stock?.type === "LIMITED" && (stock.inStock ?? 0) <= 0;
 }
 
 export function isProductSoldOut(product: FWProduct): boolean {
   if (product.state?.type === "SOLD_OUT") return true;
   return (
-    product.variants.length > 0 && product.variants.every(isVariantSoldOut)
+    product.variants.length > 0 &&
+    product.variants.every((v) => isVariantSoldOut(v, product))
   );
 }
 

@@ -1,40 +1,29 @@
 // noinspection JSUnusedGlobalSymbols
 // noinspection JSUnresolvedVariable
 
-const FW_BASE = "https://storefront-api.fourthwall.com/v1/collections";
-const CORS = {
-  "Content-Type": "application/json",
-  "Access-Control-Allow-Origin": "*",
-};
+import { collectionsUrl, getHandle, listFrom } from "../_shared/collections.js";
+import {
+  jsonResponse,
+  optionsResponse,
+  upstreamErrorResponse,
+} from "../_shared/http.js";
 
 export async function onRequestGet(context) {
-  const url = `${FW_BASE}?storefront_token=${context.env.FW_TOKEN}`;
-  const fwRes = await fetch(url, { method: "GET" });
+  const fwRes = await fetch(collectionsUrl(context.env), { method: "GET" });
 
-  if (!fwRes.ok) {
-    const errorBody = await fwRes.text();
-    return new Response(errorBody, { status: fwRes.status, headers: CORS });
-  }
+  if (!fwRes.ok) return upstreamErrorResponse(fwRes);
 
-  const json = await fwRes.json();
-  const list = Array.isArray(json) ? json : (json.results ?? []);
+  const list = listFrom(await fwRes.json());
   const hiddenHandle = context.env.UNLISTED_COLLECTION_HANDLE ?? "unlisted";
 
   const visible = list.filter((c) => {
-    const handle = c.slug ?? c.handle ?? "";
+    const handle = getHandle(c);
     return handle !== hiddenHandle && handle !== "all";
   });
 
-  return new Response(JSON.stringify(visible), { status: 200, headers: CORS });
+  return jsonResponse(visible);
 }
 
-export async function onRequestOptions() {
-  return new Response(null, {
-    status: 204,
-    headers: {
-      "Access-Control-Allow-Origin": "*",
-      "Access-Control-Allow-Methods": "GET, OPTIONS",
-      "Access-Control-Allow-Headers": "Content-Type",
-    },
-  });
+export function onRequestOptions() {
+  return optionsResponse("GET");
 }

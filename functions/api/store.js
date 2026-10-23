@@ -1,11 +1,19 @@
 // noinspection JSUnusedGlobalSymbols
 // noinspection JSUnresolvedVariable
 
-const FW_COLLECTIONS = "https://storefront-api.fourthwall.com/v1/collections";
-
-function getTotal(json) {
-  return json.paging?.elementsTotal ?? json.totalResults ?? json.total ?? 0;
-}
+import {
+  collectionProductsUrl,
+  collectionsUrl,
+  getHandle,
+  getTotal,
+  listFrom,
+} from "../_shared/collections.js";
+import {
+  CORS,
+  jsonResponse,
+  optionsResponse,
+  upstreamErrorResponse,
+} from "../_shared/http.js";
 
 async function fetchCollectionIds(handle, env) {
   const ids = new Set();
@@ -15,7 +23,7 @@ async function fetchCollectionIds(handle, env) {
 
   try {
     while (page * pageSize < total) {
-      const url = `${FW_COLLECTIONS}/${handle}/products?storefront_token=${env.FW_TOKEN}&size=${pageSize}&page=${page}`;
+      const url = collectionProductsUrl(handle, env, { size: pageSize, page });
       const res = await fetch(url, { method: "GET" });
       if (!res.ok) break;
       const json = await res.json();
@@ -32,67 +40,50 @@ async function fetchCollectionIds(handle, env) {
 
 async function fetchNamedCollectionHandles(env, unlistedHandle) {
   try {
-    const res = await fetch(
-      `${FW_COLLECTIONS}?storefront_token=${env.FW_TOKEN}`
-    );
+    const res = await fetch(collectionsUrl(env));
     if (!res.ok) return [];
-    const json = await res.json();
-    const list = Array.isArray(json) ? json : (json.results ?? []);
-    return list.reduce((handles, c) => {
-      const handle = c.slug ?? c.handle ?? "";
-      if (handle && handle !== "all" && handle !== unlistedHandle) {
-        handles.push(handle);
-      }
-      return handles;
-    }, []);
+    const handles = listFrom(await res.json()).map(getHandle);
+    return handles.filter(
+      (handle) => handle && handle !== "all" && handle !== unlistedHandle
+    );
   } catch {
     return [];
   }
 }
 
+async function fetchExcludedIds(collection, unlistedHandle, env) {
+  const handles =
+    collection === "all"
+      ? [
+          unlistedHandle,
+          ...(await fetchNamedCollectionHandles(env, unlistedHandle)),
+        ]
+      : [unlistedHandle];
+  const idSets = await Promise.all(
+    handles.map((handle) => fetchCollectionIds(handle, env))
+  );
+  return new Set(idSets.flatMap((s) => [...s]));
+}
+
 export async function onRequestGet(context) {
   const incoming = new URL(context.request.url);
-  const size = incoming.searchParams.get("size") ?? "50";
-  const page = incoming.searchParams.get("page") ?? "0";
-  const currency = incoming.searchParams.get("currency") ?? "USD";
   const debug = incoming.searchParams.get("debug") === "1";
   const unlistedHandle = context.env.UNLISTED_COLLECTION_HANDLE ?? "unlisted";
   const requested = incoming.searchParams.get("collection") ?? "all";
   const collection = requested === unlistedHandle ? "all" : requested;
 
-  const url = `${FW_COLLECTIONS}/${collection}/products?storefront_token=${context.env.FW_TOKEN}&size=${size}&page=${page}&currency=${currency}`;
-
-  const excludeIdsPromise =
-    collection === "all"
-      ? (async () => {
-          const namedHandles = await fetchNamedCollectionHandles(
-            context.env,
-            unlistedHandle
-          );
-          const idSets = await Promise.all(
-            [unlistedHandle, ...namedHandles].map((h) =>
-              fetchCollectionIds(h, context.env)
-            )
-          );
-          return new Set(idSets.flatMap((s) => [...s]));
-        })()
-      : fetchCollectionIds(unlistedHandle, context.env);
+  const url = collectionProductsUrl(collection, context.env, {
+    size: incoming.searchParams.get("size") ?? "50",
+    page: incoming.searchParams.get("page") ?? "0",
+    currency: incoming.searchParams.get("currency") ?? "USD",
+  });
 
   const [fwRes, excludeIds] = await Promise.all([
     fetch(url, { method: "GET" }),
-    excludeIdsPromise,
+    fetchExcludedIds(collection, unlistedHandle, context.env),
   ]);
 
-  if (!fwRes.ok) {
-    const errorBody = await fwRes.text();
-    return new Response(errorBody, {
-      status: fwRes.status,
-      headers: {
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
-      },
-    });
-  }
+  if (!fwRes.ok) return upstreamErrorResponse(fwRes);
 
   const json = await fwRes.json();
   const originalResults = json.results ?? [];
@@ -110,29 +101,13 @@ export async function onRequestGet(context) {
     const first = filtered.results?.[0] ?? filtered;
     return new Response(JSON.stringify(first, null, 2), {
       status: fwRes.status,
-      headers: {
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
-      },
+      headers: CORS,
     });
   }
 
-  return new Response(JSON.stringify(filtered), {
-    status: fwRes.status,
-    headers: {
-      "Content-Type": "application/json",
-      "Access-Control-Allow-Origin": "*",
-    },
-  });
+  return jsonResponse(filtered, fwRes.status);
 }
 
-export async function onRequestOptions() {
-  return new Response(null, {
-    status: 204,
-    headers: {
-      "Access-Control-Allow-Origin": "*",
-      "Access-Control-Allow-Methods": "GET, OPTIONS",
-      "Access-Control-Allow-Headers": "Content-Type",
-    },
-  });
+export function onRequestOptions() {
+  return optionsResponse("GET");
 }

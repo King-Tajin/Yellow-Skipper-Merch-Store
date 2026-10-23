@@ -9,11 +9,12 @@ import {
   ShoppingCart,
   Unlock,
 } from "lucide-react";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import type { SubmitEvent } from "react";
 import {
   fetchCollections,
   fetchProducts,
+  fetchUnavailableVariants,
   fetchUnlistedProducts,
   HOMEPAGE_URL,
   SHOP_URL,
@@ -26,8 +27,25 @@ import { ProductModal } from "./ProductModal";
 import { SkeletonCard } from "./SkeletonCard";
 import { StoreError } from "./StoreError";
 import { StoreFooter } from "./StoreFooter";
+import { markUnavailable } from "@/lib/productUtils";
 import { CURRENCIES } from "@/lib/types";
 import type { CartItem, Currency, FWCollection, FWProduct } from "@/lib/types";
+
+const UNAVAILABLE_KEY = "ysg-merch-unavailable:v1";
+const UNAVAILABLE_TTL_MS = 30 * 60 * 1000;
+
+function loadUnavailable(): Record<string, number> {
+  try {
+    const saved = localStorage.getItem(UNAVAILABLE_KEY);
+    const parsed = saved ? (JSON.parse(saved) as Record<string, number>) : {};
+    const now = Date.now();
+    return Object.fromEntries(
+      Object.entries(parsed).filter(([, expiresAt]) => expiresAt > now)
+    );
+  } catch {
+    return {};
+  }
+}
 
 export default function StorePage() {
   const [products, setProducts] = useState<FWProduct[]>([]);
@@ -50,6 +68,8 @@ export default function StorePage() {
       return [];
     }
   });
+  const [unavailable, setUnavailable] =
+    useState<Record<string, number>>(loadUnavailable);
   const [cartOpen, setCartOpen] = useState(false);
   const [cartBounce, setCartBounce] = useState(false);
 
@@ -66,6 +86,80 @@ export default function StorePage() {
       localStorage.setItem("ysg-merch-cart:v1", JSON.stringify(cartItems));
     } catch {}
   }, [cartItems]);
+
+  useEffect(() => {
+    try {
+      localStorage.setItem(UNAVAILABLE_KEY, JSON.stringify(unavailable));
+    } catch {}
+  }, [unavailable]);
+
+  const unavailableIds = useMemo(
+    () => new Set(Object.keys(unavailable)),
+    [unavailable]
+  );
+
+  const shownProducts = useMemo(
+    () => products.map((p) => markUnavailable(p, unavailableIds)),
+    [products, unavailableIds]
+  );
+
+  const shownCollectionProducts = useMemo(
+    () =>
+      Object.fromEntries(
+        Object.entries(collectionProducts).map(([slug, list]) => [
+          slug,
+          list.map((p) => markUnavailable(p, unavailableIds)),
+        ])
+      ),
+    [collectionProducts, unavailableIds]
+  );
+
+  const shownUnlistedProducts = useMemo(
+    () => unlistedProducts.map((p) => markUnavailable(p, unavailableIds)),
+    [unlistedProducts, unavailableIds]
+  );
+
+  const shownActiveProduct = useMemo(
+    () =>
+      activeProduct ? markUnavailable(activeProduct, unavailableIds) : null,
+    [activeProduct, unavailableIds]
+  );
+
+  function handleUnavailable(variantIds: string[]) {
+    const expiresAt = Date.now() + UNAVAILABLE_TTL_MS;
+    setUnavailable((prev) => ({
+      ...prev,
+      ...Object.fromEntries(variantIds.map((id) => [id, expiresAt])),
+    }));
+    setCartItems((prev) =>
+      prev.filter((c) => !variantIds.includes(c.variantId))
+    );
+  }
+
+  const recheckUnavailable = useCallback(
+    async (ids: string[]) => {
+      if (ids.length === 0) return;
+      try {
+        const stillUnavailable = await fetchUnavailableVariants(ids, currency);
+        const expiresAt = Date.now() + UNAVAILABLE_TTL_MS;
+        setUnavailable((prev) => {
+          const next: Record<string, number> = {};
+          for (const [id, expiry] of Object.entries(prev)) {
+            if (!ids.includes(id)) next[id] = expiry;
+            else if (stillUnavailable.includes(id)) next[id] = expiresAt;
+          }
+          return next;
+        });
+      } catch {}
+    },
+    [currency]
+  );
+
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    void recheckUnavailable(Object.keys(loadUnavailable()));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const totalCartQty = cartItems.reduce((s, i) => s + i.quantity, 0);
 
@@ -257,6 +351,7 @@ export default function StorePage() {
             type="button"
             onClick={() => {
               void load();
+              void recheckUnavailable(Object.keys(unavailable));
             }}
             disabled={status === "loading"}
             className="flex items-center gap-2.5 px-5 py-3 bg-obsidian-800 pixel-border-sm text-gray-400 hover:text-crown-gold transition-colors group disabled:opacity-50 disabled:cursor-not-allowed"
@@ -392,14 +487,14 @@ export default function StorePage() {
             >
               {products.length > 0 && (
                 <ProductGrid
-                  products={products}
+                  products={shownProducts}
                   cartItems={cartItems}
                   onSelect={setActiveProduct}
                 />
               )}
 
               {collections.map((c) => {
-                const items = collectionProducts[c.slug] ?? [];
+                const items = shownCollectionProducts[c.slug] ?? [];
                 if (items.length === 0) return null;
                 return (
                   <div key={c.slug}>
@@ -446,9 +541,9 @@ export default function StorePage() {
                 UNLISTED ITEMS
               </h2>
             </div>
-            {unlistedProducts.length > 0 ? (
+            {shownUnlistedProducts.length > 0 ? (
               <ProductGrid
-                products={unlistedProducts}
+                products={shownUnlistedProducts}
                 cartItems={cartItems}
                 onSelect={setActiveProduct}
               />
@@ -464,10 +559,10 @@ export default function StorePage() {
       </div>
 
       <AnimatePresence>
-        {activeProduct && (
+        {shownActiveProduct && (
           <ProductModal
             key="modal"
-            product={activeProduct}
+            product={shownActiveProduct}
             onClose={() => setActiveProduct(null)}
             currency={currency}
             setCurrency={setCurrency}
@@ -489,6 +584,7 @@ export default function StorePage() {
             onUpdateQty={updateQty}
             onRemove={removeFromCart}
             onClear={clearCart}
+            onUnavailable={handleUnavailable}
           />
         )}
       </AnimatePresence>

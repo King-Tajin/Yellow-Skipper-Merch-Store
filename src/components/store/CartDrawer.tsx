@@ -12,7 +12,7 @@ import {
   X,
 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
-import { createCheckout } from "@/lib/api";
+import { createCheckout, UnavailableItemsError } from "@/lib/api";
 import { cartTotal, formatPrice } from "@/lib/productUtils";
 import type { CartItem, Currency } from "@/lib/types";
 
@@ -23,6 +23,7 @@ export function CartDrawer({
   onUpdateQty,
   onRemove,
   onClear,
+  onUnavailable,
 }: {
   items: CartItem[];
   currency: Currency;
@@ -30,6 +31,7 @@ export function CartDrawer({
   onUpdateQty: (variantId: string, qty: number) => void;
   onRemove: (variantId: string) => void;
   onClear: () => void;
+  onUnavailable: (variantIds: string[]) => void;
 }) {
   const drawerRef = useRef<HTMLDivElement>(null);
   const total = cartTotal(items);
@@ -56,7 +58,23 @@ export function CartDrawer({
       const url = await createCheckout(items, currency);
       window.open(url, "_blank", "noopener,noreferrer");
     } catch (err) {
-      setCheckoutError(err instanceof Error ? err.message : "Checkout failed");
+      if (err instanceof UnavailableItemsError && err.variantIds.length > 0) {
+        const names = items
+          .filter((i) => err.variantIds.includes(i.variantId))
+          .map((i) =>
+            [i.productName, i.variantColor, i.variantSize]
+              .filter(Boolean)
+              .join(" / ")
+          );
+        setCheckoutError(
+          `Sold out and removed from your cart: ${names.join(", ")}`
+        );
+        onUnavailable(err.variantIds);
+      } else {
+        setCheckoutError(
+          err instanceof Error ? err.message : "Checkout failed"
+        );
+      }
     } finally {
       setCheckingOut(false);
     }

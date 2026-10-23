@@ -53,6 +53,22 @@ export function isProductSoldOut(product: FWProduct): boolean {
   );
 }
 
+export function markUnavailable(
+  product: FWProduct,
+  unavailableIds: ReadonlySet<string>
+): FWProduct {
+  if (unavailableIds.size === 0) return product;
+  if (!product.variants.some((v) => unavailableIds.has(v.id))) return product;
+  return {
+    ...product,
+    variants: product.variants.map((v) =>
+      unavailableIds.has(v.id)
+        ? { ...v, stock: { type: "LIMITED", inStock: 0 } }
+        : v
+    ),
+  };
+}
+
 export function getColorsAndSizes(variants: FWVariant[]) {
   const colorSet = new Set<string>();
   const sizeSet = new Set<string>();

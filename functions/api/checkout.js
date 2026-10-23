@@ -1,47 +1,22 @@
 // noinspection JSUnusedGlobalSymbols
 // noinspection JSUnresolvedVariable
 
-const FW_BASE = "https://storefront-api.fourthwall.com/v1";
-const CORS = {
-  "Content-Type": "application/json",
-  "Access-Control-Allow-Origin": "*",
-};
-
-function ok(body) {
-  return new Response(JSON.stringify(body), { status: 200, headers: CORS });
-}
+import { postCart, probeVariants, readCartRequest } from "../_shared/cart.js";
+import { ok, optionsResponse, parseJson } from "../_shared/http.js";
 
 export async function onRequestPost(context) {
-  let body;
-  try {
-    body = await context.request.json();
-  } catch {
-    return ok({ ok: false, error: "Invalid JSON body" });
-  }
+  const input = await readCartRequest(
+    context.request,
+    "items",
+    "No items provided"
+  );
+  if (input.error) return ok({ ok: false, error: input.error });
 
-  const currency = body.currency ?? "USD";
-  const items = Array.isArray(body.items) ? body.items : [];
-
-  if (items.length === 0) {
-    return ok({ ok: false, error: "No items provided" });
-  }
+  const { currency, list: items } = input;
 
   let cartRes, cartText;
   try {
-    cartRes = await fetch(
-      `${FW_BASE}/carts?storefront_token=${context.env.FW_TOKEN}`,
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          currency,
-          items: items.map((i) => ({
-            variantId: i.variantId,
-            quantity: i.quantity,
-          })),
-        }),
-      }
-    );
+    cartRes = await postCart(items, currency, context.env);
     cartText = await cartRes.text();
   } catch (err) {
     return ok({
@@ -51,7 +26,26 @@ export async function onRequestPost(context) {
     });
   }
 
+  const cart = parseJson(cartText);
+
   if (!cartRes.ok) {
+    if (cart && cart.code === "CART_OFFER_NOT_AVAILABLE") {
+      const { unavailable: unavailableVariantIds } = await probeVariants(
+        items.map((i) => i.variantId),
+        currency,
+        context.env
+      );
+      if (cart.variantId && !unavailableVariantIds.includes(cart.variantId)) {
+        unavailableVariantIds.push(cart.variantId);
+      }
+      return ok({
+        ok: false,
+        error: "Some items are currently unavailable",
+        code: cart.code,
+        unavailableVariantIds,
+        detail: cartText,
+      });
+    }
     return ok({
       ok: false,
       error: `Cart creation failed (FW ${cartRes.status})`,
@@ -59,10 +53,7 @@ export async function onRequestPost(context) {
     });
   }
 
-  let cart;
-  try {
-    cart = JSON.parse(cartText);
-  } catch {
+  if (!cart) {
     return ok({
       ok: false,
       error: "FW returned non-JSON for cart",
@@ -82,13 +73,6 @@ export async function onRequestPost(context) {
   return ok({ ok: true, cartId });
 }
 
-export async function onRequestOptions() {
-  return new Response(null, {
-    status: 204,
-    headers: {
-      "Access-Control-Allow-Origin": "*",
-      "Access-Control-Allow-Methods": "POST, OPTIONS",
-      "Access-Control-Allow-Headers": "Content-Type",
-    },
-  });
+export function onRequestOptions() {
+  return optionsResponse("POST");
 }

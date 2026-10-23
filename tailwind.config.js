@@ -24,7 +24,7 @@ module.exports = {
         },
       },
       fontFamily: {
-        pixel: ["VT323", "monospace"],
+        jakarta: ["Plus Jakarta Sans", "sans-serif"],
         code: ["JetBrains Mono", "monospace"],
       },
       boxShadow: {

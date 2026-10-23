@@ -53,7 +53,7 @@ export function SizeGuideModal({
             >
               <div className="flex items-center gap-3">
                 <Ruler className="w-6 h-6 text-crown-gold" />
-                <span className="font-pixel text-sm text-crown-amber tracking-widest">
+                <span className="font-jakarta text-sm text-crown-amber tracking-widest">
                   SIZE GUIDE
                 </span>
               </div>
@@ -77,7 +77,7 @@ export function SizeGuideModal({
                 const linkUrl = linkMatch?.[1];
                 return (
                   <div className="flex flex-col gap-3">
-                    <p className="font-pixel text-xs text-gray-500 tracking-widest">
+                    <p className="font-jakarta text-xs text-gray-500 tracking-widest">
                       PRODUCT SIZE CHART
                     </p>
                     {linkUrl ? (
@@ -86,7 +86,7 @@ export function SizeGuideModal({
                           href={linkUrl}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="flex items-center gap-2.5 px-4 py-3 font-pixel text-xs tracking-wider transition-[filter]"
+                          className="flex items-center gap-2.5 px-4 py-3 font-jakarta text-xs tracking-wider transition-[filter]"
                           style={{
                             background:
                               "linear-gradient(180deg, #5000aa 0%, #28007c 100%)",
@@ -131,8 +131,8 @@ export function SizeGuideModal({
                   onClick={() => setGeneralRefOpen((o) => !o)}
                   className="w-full flex items-center justify-between hover:bg-obsidian-800 transition-colors px-1 py-1 rounded"
                 >
-                  <p className="font-pixel text-xs text-gray-500 tracking-widest">
-                    GENERAL REFERENCE — UNISEX
+                  <p className="font-jakarta text-xs text-gray-500 tracking-widest">
+                    GENERAL REFERENCE â€” UNISEX
                   </p>
                   <m.div
                     animate={{ rotate: generalRefOpen ? 180 : 0 }}
@@ -171,13 +171,13 @@ export function SizeGuideModal({
                             </thead>
                             <tbody>
                               {[
-                                ["XS", "31–33", "25–27", '26"'],
-                                ["S", "34–36", "28–30", '27"'],
-                                ["M", "37–39", "31–33", '28"'],
-                                ["L", "40–42", "34–36", '29"'],
-                                ["XL", "43–45", "37–39", '30"'],
-                                ["2XL", "46–48", "40–42", '31"'],
-                                ["3XL", "49–51", "43–45", '32"'],
+                                ["XS", "31â€“33", "25â€“27", '26"'],
+                                ["S", "34â€“36", "28â€“30", '27"'],
+                                ["M", "37â€“39", "31â€“33", '28"'],
+                                ["L", "40â€“42", "34â€“36", '29"'],
+                                ["XL", "43â€“45", "37â€“39", '30"'],
+                                ["2XL", "46â€“48", "40â€“42", '31"'],
+                                ["3XL", "49â€“51", "43â€“45", '32"'],
                               ].map(([size, ...vals], i) => (
                                 <tr
                                   key={size}
@@ -188,7 +188,7 @@ export function SizeGuideModal({
                                         : "transparent",
                                   }}
                                 >
-                                  <td className="px-3 py-2 text-crown-amber font-bold border border-obsidian-600 font-pixel text-xs">
+                                  <td className="px-3 py-2 text-crown-amber font-bold border border-obsidian-600 font-jakarta text-xs">
                                     {size}
                                   </td>
                                   {vals.map((v, j) => (
@@ -210,20 +210,26 @@ export function SizeGuideModal({
                         </p>
 
                         <div className="p-3 bg-obsidian-800/50 pixel-border-sm">
-                          <p className="font-pixel text-[10px] text-gray-500 mb-2 tracking-widest">
+                          <p className="font-jakarta text-[10px] text-gray-500 mb-2 tracking-widest">
                             HOW TO MEASURE
                           </p>
                           <div className="flex flex-col gap-1.5 font-code text-xs text-gray-400">
                             <p>
-                              <span className="text-crown-amber">Chest —</span>{" "}
+                              <span className="text-crown-amber">
+                                Chest â€”
+                              </span>{" "}
                               Around the fullest part, tape level.
                             </p>
                             <p>
-                              <span className="text-crown-amber">Waist —</span>{" "}
+                              <span className="text-crown-amber">
+                                Waist â€”
+                              </span>{" "}
                               Around the narrowest part of your torso.
                             </p>
                             <p>
-                              <span className="text-crown-amber">Length —</span>{" "}
+                              <span className="text-crown-amber">
+                                Length â€”
+                              </span>{" "}
                               Shoulder point down to the hem.
                             </p>
                           </div>

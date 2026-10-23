@@ -112,7 +112,7 @@ export function CartDrawer({
         >
           <div className="flex items-center gap-3">
             <ShoppingCart className="w-6 h-6 text-crown-gold" />
-            <span className="font-pixel text-sm text-crown-amber tracking-widest">
+            <span className="font-jakarta text-sm text-crown-amber tracking-widest">
               YOUR CART
             </span>
             {totalItems > 0 && (
@@ -126,7 +126,7 @@ export function CartDrawer({
               <button
                 type="button"
                 onClick={onClear}
-                className="flex items-center gap-1.5 px-3 py-2 bg-obsidian-800 pixel-border-sm text-gray-500 hover:text-tajin-red transition-colors font-pixel text-xs"
+                className="flex items-center gap-1.5 px-3 py-2 bg-obsidian-800 pixel-border-sm text-gray-500 hover:text-tajin-red transition-colors font-jakarta text-xs"
                 title="Clear cart"
               >
                 <Trash2 className="w-3.5 h-3.5" />
@@ -153,7 +153,7 @@ export function CartDrawer({
               >
                 <Package className="w-12 h-12 text-obsidian-600" />
                 <div>
-                  <p className="font-pixel text-xs text-gray-500 mb-1">
+                  <p className="font-jakarta text-xs text-gray-500 mb-1">
                     CART IS EMPTY
                   </p>
                   <p className="font-code text-xs text-gray-600">
@@ -189,7 +189,7 @@ export function CartDrawer({
                   </div>
 
                   <div className="flex-1 min-w-0 flex flex-col gap-1.5">
-                    <p className="font-pixel text-xs text-crown-amber leading-snug line-clamp-2">
+                    <p className="font-jakarta text-xs text-crown-amber leading-snug line-clamp-2">
                       {item.productName}
                     </p>
                     <div className="flex flex-wrap gap-1">
@@ -222,7 +222,7 @@ export function CartDrawer({
                         >
                           <Minus className="w-3 h-3" />
                         </button>
-                        <span className="font-pixel text-xs text-white w-6 text-center tabular-nums">
+                        <span className="font-jakarta text-xs text-white w-6 text-center tabular-nums">
                           {item.quantity}
                         </span>
                         <button
@@ -258,10 +258,10 @@ export function CartDrawer({
             style={{ background: "rgba(10,0,20,0.97)" }}
           >
             <div className="flex items-center justify-between px-1">
-              <span className="font-pixel text-xs text-gray-500 tracking-widest">
+              <span className="font-jakarta text-xs text-gray-500 tracking-widest">
                 SUBTOTAL
               </span>
-              <span className="font-pixel text-xl text-tajin-lime">
+              <span className="font-jakarta text-xl text-tajin-lime">
                 {formatPrice({
                   value: total,
                   currency: items[0].price.currency,
@@ -282,7 +282,7 @@ export function CartDrawer({
               type="button"
               onClick={handleCheckout}
               disabled={checkingOut}
-              className="w-full flex items-center justify-center gap-3 py-4 font-pixel text-base tracking-wider transition-[filter,opacity] disabled:opacity-70 disabled:cursor-not-allowed"
+              className="w-full flex items-center justify-center gap-3 py-4 font-jakarta text-base tracking-wider transition-[filter,opacity] disabled:opacity-70 disabled:cursor-not-allowed"
               style={{
                 background: "linear-gradient(180deg, #5000aa 0%, #28007c 100%)",
                 border: "2px solid #5000aa",

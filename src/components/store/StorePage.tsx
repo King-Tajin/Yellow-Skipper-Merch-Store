@@ -288,7 +288,7 @@ export default function StorePage() {
               whileHover={{ x: -4 }}
             >
               <ArrowLeft className="w-5 h-5" />
-              <span className="font-pixel text-sm">BACK TO VAGUDLE</span>
+              <span className="font-jakarta text-sm">BACK TO VAGUDLE</span>
             </m.a>
 
             <m.a
@@ -297,7 +297,7 @@ export default function StorePage() {
               whileHover={{ x: -4 }}
             >
               <ArrowLeft className="w-5 h-5" />
-              <span className="font-pixel text-sm">BACK TO HOMEPAGE</span>
+              <span className="font-jakarta text-sm">BACK TO HOMEPAGE</span>
             </m.a>
           </div>
 
@@ -308,13 +308,13 @@ export default function StorePage() {
             transition={{ duration: 0.5, ease: "easeInOut" }}
           >
             <ShoppingCart className="w-5 h-5" />
-            <span className="font-pixel text-sm">CART</span>
+            <span className="font-jakarta text-sm">CART</span>
             {totalCartQty > 0 && (
               <m.span
                 key={totalCartQty}
                 initial={{ scale: 0.6 }}
                 animate={{ scale: 1 }}
-                className="min-w-5.5 h-5.5 flex items-center justify-center bg-crown-gold text-obsidian-900 font-pixel text-xs px-1"
+                className="min-w-5.5 h-5.5 flex items-center justify-center bg-crown-gold text-obsidian-900 font-jakarta text-xs px-1"
               >
                 {totalCartQty}
               </m.span>
@@ -327,7 +327,7 @@ export default function StorePage() {
           animate={{ opacity: 1, y: 0 }}
           className="text-center mb-4"
         >
-          <h1 className="font-pixel text-3xl sm:text-4xl md:text-5xl text-crown-gold crown-glow mb-2">
+          <h1 className="font-jakarta text-3xl sm:text-4xl md:text-5xl text-crown-gold crown-glow mb-2">
             YELLOW SKIPPER MERCH STORE
           </h1>
           <p className="font-code text-sm sm:text-base text-gray-400">
@@ -359,14 +359,14 @@ export default function StorePage() {
             <RefreshCw
               className={`w-6 h-6 ${status === "loading" ? "animate-spin" : "group-hover:rotate-180 transition-transform duration-500"}`}
             />
-            <span className="font-pixel text-base">Refresh</span>
+            <span className="font-jakarta text-base">Refresh</span>
           </button>
 
           <div className="relative flex items-center">
             <select
               value={currency}
               onChange={(e) => setCurrency(e.target.value as Currency)}
-              className="pl-5 pr-10 py-3 bg-obsidian-800 pixel-border-sm text-crown-gold font-pixel text-base cursor-pointer hover:bg-obsidian-700 transition-colors appearance-none"
+              className="pl-5 pr-10 py-3 bg-obsidian-800 pixel-border-sm text-crown-gold font-jakarta text-base cursor-pointer hover:bg-obsidian-700 transition-colors appearance-none"
               style={{ backgroundImage: "none" }}
               title="Select currency"
             >
@@ -374,7 +374,7 @@ export default function StorePage() {
                 <option
                   key={c}
                   value={c}
-                  className="bg-obsidian-900 text-crown-gold font-pixel"
+                  className="bg-obsidian-900 text-crown-gold font-jakarta"
                 >
                   {c}
                 </option>
@@ -390,7 +390,7 @@ export default function StorePage() {
             className="flex items-center gap-2.5 px-5 py-3 bg-obsidian-800 pixel-border-sm text-crown-gold hover:bg-obsidian-700 transition-colors"
           >
             <ExternalLink className="w-6 h-6" />
-            <span className="font-pixel text-base">OPEN OLD STORE</span>
+            <span className="font-jakarta text-base">OPEN OLD STORE</span>
           </a>
 
           <button
@@ -403,7 +403,7 @@ export default function StorePage() {
             ) : (
               <Lock className="w-6 h-6" />
             )}
-            <span className="font-pixel text-base">
+            <span className="font-jakarta text-base">
               {unlockStatus === "success" ? "UNLOCKED" : "HAVE A CODE?"}
             </span>
           </button>
@@ -418,7 +418,7 @@ export default function StorePage() {
           >
             <label
               htmlFor="unlock-code"
-              className="font-pixel text-xs text-gray-400"
+              className="font-jakarta text-xs text-gray-400"
             >
               CODE:
             </label>
@@ -434,7 +434,7 @@ export default function StorePage() {
             <button
               type="submit"
               disabled={unlockStatus === "loading" || unlockCode === ""}
-              className="px-4 py-2.5 bg-crown-gold/10 border border-crown-gold/50 hover:border-crown-gold text-crown-gold font-pixel text-xs transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              className="px-4 py-2.5 bg-crown-gold/10 border border-crown-gold/50 hover:border-crown-gold text-crown-gold font-jakarta text-xs transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {unlockStatus === "loading" ? "CHECKING..." : "UNLOCK"}
             </button>
@@ -500,7 +500,7 @@ export default function StorePage() {
                   <div key={c.slug}>
                     <div className="flex items-center gap-3 mb-5">
                       <div className="flex-1 h-px bg-crown-gold/30" />
-                      <h2 className="font-pixel text-sm sm:text-base text-crown-gold whitespace-nowrap">
+                      <h2 className="font-jakarta text-sm sm:text-base text-crown-gold whitespace-nowrap">
                         {c.name.toUpperCase()}
                       </h2>
                       <div className="flex-1 h-px bg-crown-gold/30" />
@@ -524,7 +524,9 @@ export default function StorePage() {
               className="flex flex-col items-center justify-center py-16 gap-3 text-center"
             >
               <ShoppingBag className="w-10 h-10 text-obsidian-600" />
-              <p className="font-pixel text-sm text-gray-500">NO ITEMS FOUND</p>
+              <p className="font-jakarta text-sm text-gray-500">
+                NO ITEMS FOUND
+              </p>
             </m.div>
           )}
         </AnimatePresence>
@@ -537,7 +539,7 @@ export default function StorePage() {
           >
             <div className="flex items-center gap-2 justify-center mb-4">
               <Unlock className="w-4 h-4 text-crown-gold" />
-              <h2 className="font-pixel text-base sm:text-lg text-crown-gold">
+              <h2 className="font-jakarta text-base sm:text-lg text-crown-gold">
                 UNLISTED ITEMS
               </h2>
             </div>
@@ -548,7 +550,7 @@ export default function StorePage() {
                 onSelect={setActiveProduct}
               />
             ) : (
-              <p className="font-pixel text-sm text-gray-500 text-center">
+              <p className="font-jakarta text-sm text-gray-500 text-center">
                 NO UNLISTED ITEMS FOUND
               </p>
             )}

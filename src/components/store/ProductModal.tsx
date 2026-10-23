@@ -159,7 +159,7 @@ export function ProductModal({
           >
             <div className="flex items-center gap-3">
               <Crown className="w-8 h-8 text-crown-gold" />
-              <span className="font-pixel text-base text-crown-amber tracking-widest">
+              <span className="font-jakarta text-base text-crown-amber tracking-widest">
                 PRODUCT DETAILS
               </span>
             </div>
@@ -169,7 +169,7 @@ export function ProductModal({
                   value={currency}
                   onChange={(e) => setCurrency(e.target.value as Currency)}
                   aria-label="Select currency"
-                  className="pl-5 pr-10 py-3 bg-obsidian-800 pixel-border-sm text-crown-gold font-pixel text-base cursor-pointer hover:bg-obsidian-700 transition-colors appearance-none"
+                  className="pl-5 pr-10 py-3 bg-obsidian-800 pixel-border-sm text-crown-gold font-jakarta text-base cursor-pointer hover:bg-obsidian-700 transition-colors appearance-none"
                   style={{ backgroundImage: "none" }}
                 >
                   {CURRENCIES.map((c) => (
@@ -207,7 +207,7 @@ export function ProductModal({
 
             <div className="p-4 sm:p-6 flex flex-col gap-5">
               <div>
-                <h2 className="font-pixel text-3xl sm:text-4xl text-crown-gold leading-snug mb-3">
+                <h2 className="font-jakarta text-3xl sm:text-4xl text-crown-gold leading-snug mb-3">
                   {product.name}
                 </h2>
                 <AnimatePresence mode="wait">
@@ -225,7 +225,7 @@ export function ProductModal({
                           className={`w-7 h-7 ${isOutOfStock ? "text-gray-500" : "text-tajin-lime"}`}
                         />
                         <span
-                          className={`font-pixel text-4xl ${
+                          className={`font-jakarta text-4xl ${
                             isOutOfStock
                               ? "text-gray-500 line-through"
                               : "text-tajin-lime"
@@ -234,14 +234,14 @@ export function ProductModal({
                           {formatPrice(resolvedVariant.unitPrice)}
                         </span>
                         {isOutOfStock && (
-                          <span className="flex items-center gap-1.5 px-3 py-1 font-pixel text-sm text-white bg-red-700">
+                          <span className="flex items-center gap-1.5 px-3 py-1 font-jakarta text-sm text-white bg-red-700">
                             <Ban className="w-4 h-4" />
                             SOLD OUT
                           </span>
                         )}
                       </>
                     ) : (
-                      <span className="font-pixel text-xl text-gray-500">
+                      <span className="font-jakarta text-xl text-gray-500">
                         SELECT OPTIONS
                       </span>
                     )}
@@ -278,8 +278,8 @@ export function ProductModal({
                 <div className="flex flex-col gap-4">
                   {colors.length > 0 && (
                     <div>
-                      <p className="font-pixel text-4xl text-gray-500 mb-3 tracking-widest">
-                        COLOR —{" "}
+                      <p className="font-jakarta text-4xl text-gray-500 mb-3 tracking-widest">
+                        COLOR â€”{" "}
                         <span className="text-crown-amber">
                           {selectedColor}
                         </span>
@@ -344,8 +344,8 @@ export function ProductModal({
                   {sizes.length > 0 && (
                     <div>
                       <div className="flex items-center justify-between mb-3">
-                        <p className="font-pixel text-4xl text-gray-500 tracking-widest">
-                          SIZE —{" "}
+                        <p className="font-jakarta text-4xl text-gray-500 tracking-widest">
+                          SIZE â€”{" "}
                           <span className="text-crown-amber">
                             {selectedSize}
                           </span>
@@ -353,7 +353,7 @@ export function ProductModal({
                         <button
                           type="button"
                           onClick={() => setSizeGuideOpen(true)}
-                          className="flex items-center gap-1.5 px-3 py-1.5 bg-obsidian-800 pixel-border-sm text-gray-400 hover:text-crown-gold transition-colors font-pixel text-xs"
+                          className="flex items-center gap-1.5 px-3 py-1.5 bg-obsidian-800 pixel-border-sm text-gray-400 hover:text-crown-gold transition-colors font-jakarta text-xs"
                         >
                           <Ruler className="w-3.5 h-3.5" />
                           SIZE GUIDE
@@ -403,7 +403,7 @@ export function ProductModal({
                   onClick={handleAddToCart}
                   disabled={isOutOfStock || !resolvedVariant}
                   whileTap={{ scale: 0.97 }}
-                  className="w-full flex items-center justify-center gap-3 py-4 font-pixel text-xl tracking-wider transition-all relative overflow-hidden disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="w-full flex items-center justify-center gap-3 py-4 font-jakarta text-xl tracking-wider transition-all relative overflow-hidden disabled:opacity-50 disabled:cursor-not-allowed"
                   style={{
                     background: isOutOfStock
                       ? "linear-gradient(180deg, #4a1010 0%, #2a0808 100%)"
@@ -447,7 +447,7 @@ export function ProductModal({
                         exit={{ opacity: 0, y: -8 }}
                         className="flex items-center gap-2"
                       >
-                        ✓ ADDED TO CART
+                        âœ“ ADDED TO CART
                       </m.span>
                     ) : (
                       <m.span
@@ -468,7 +468,7 @@ export function ProductModal({
                   href={shopLink}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="w-full flex items-center justify-center gap-3 py-3 font-pixel text-base tracking-wider transition-colors"
+                  className="w-full flex items-center justify-center gap-3 py-3 font-jakarta text-base tracking-wider transition-colors"
                   style={{
                     background: "transparent",
                     border: "2px solid #5000aa",

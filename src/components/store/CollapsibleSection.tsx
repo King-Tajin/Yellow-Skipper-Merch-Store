@@ -20,7 +20,7 @@ export function CollapsibleSection({
         onClick={onToggle}
         className="w-full flex items-center justify-between px-4 py-3 hover:bg-obsidian-700 transition-colors"
       >
-        <p className="font-pixel text-xs text-gray-500 tracking-widest">
+        <p className="font-jakarta text-xs text-gray-500 tracking-widest">
           {title}
         </p>
         <m.div

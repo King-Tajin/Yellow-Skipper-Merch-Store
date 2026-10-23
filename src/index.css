@@ -1,6 +1,15 @@
 @import "tailwindcss";
 @config "../tailwind.config.js";
 
+@font-face {
+  font-family: "Plus Jakarta Sans";
+  /*noinspection CssUnknownTarget*/
+  src: url("/fonts/plus-jakarta-sans-latin-700-normal.woff2") format("woff2");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
 * {
   scrollbar-width: thin;
   scrollbar-color: #ffd700 #141414;

@@ -14,11 +14,11 @@ export function StoreFooter() {
           <div className="w-2 h-2 bg-crown-gold" />
           <div className="w-2 h-2 bg-tajin-lime" />
         </div>
-        <p className="font-pixel text-[10px] sm:text-xs text-gray-500 mb-1">
-          Powered by Fourthwall • Merch delivered worldwide
+        <p className="font-jakarta text-[10px] sm:text-xs text-gray-500 mb-1">
+          Powered by Fourthwall â€¢ Merch delivered worldwide
         </p>
         <p className="font-code text-[9px] sm:text-[10px] text-gray-600">
-          Secure checkout • Click any item to view details
+          Secure checkout â€¢ Click any item to view details
         </p>
         <div className="flex items-center justify-center gap-3 mt-2">
           <a

@@ -279,7 +279,7 @@ export function ProductModal({
                   {colors.length > 0 && (
                     <div>
                       <p className="font-jakarta text-4xl text-gray-500 mb-3 tracking-widest">
-                        COLOR â€”{" "}
+                        COLOR —{" "}
                         <span className="text-crown-amber">
                           {selectedColor}
                         </span>
@@ -345,7 +345,7 @@ export function ProductModal({
                     <div>
                       <div className="flex items-center justify-between mb-3">
                         <p className="font-jakarta text-4xl text-gray-500 tracking-widest">
-                          SIZE â€”{" "}
+                          SIZE —{" "}
                           <span className="text-crown-amber">
                             {selectedSize}
                           </span>
@@ -447,7 +447,7 @@ export function ProductModal({
                         exit={{ opacity: 0, y: -8 }}
                         className="flex items-center gap-2"
                       >
-                        âœ“ ADDED TO CART
+                        ✓ ADDED TO CART
                       </m.span>
                     ) : (
                       <m.span

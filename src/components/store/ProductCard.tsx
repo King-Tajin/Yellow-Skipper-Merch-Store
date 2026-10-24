@@ -45,7 +45,7 @@ export function ProductCard({
       whileTap={{ scale: 0.98 }}
     >
       {soldOut && (
-        <div className="absolute top-2 left-2 z-10 flex items-center gap-1 px-2 py-1 font-jakarta text-[9px] text-white bg-red-700">
+        <div className="absolute top-2 left-2 z-10 flex items-center gap-1 px-2 py-1 rounded-full font-jakarta text-[9px] text-white bg-red-700">
           <Ban className="w-2.5 h-2.5" />
           SOLD OUT
         </div>

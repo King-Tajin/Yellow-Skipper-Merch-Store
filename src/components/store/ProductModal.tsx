@@ -234,7 +234,7 @@ export function ProductModal({
                           {formatPrice(resolvedVariant.unitPrice)}
                         </span>
                         {isOutOfStock && (
-                          <span className="flex items-center gap-1.5 px-3 py-1 font-jakarta text-sm text-white bg-red-700">
+                          <span className="flex items-center gap-1.5 px-3 py-1 font-jakarta text-sm text-white bg-red-700 rounded">
                             <Ban className="w-4 h-4" />
                             SOLD OUT
                           </span>
@@ -484,11 +484,10 @@ export function ProductModal({
                   }}
                 >
                   <ExternalLink className="w-4 h-4 opacity-70" />
-                  VIEW ON STORE
+                  VIEW IN OLD STORE
                 </a>
 
                 <div className="flex items-center justify-center gap-2 py-2.5 bg-obsidian-800/50 pixel-border-sm">
-                  <div className="w-2 h-2 bg-tajin-lime rounded-full" />
                   <span className="font-code text-sm text-gray-500">
                     Secure checkout via Fourthwall
                   </span>

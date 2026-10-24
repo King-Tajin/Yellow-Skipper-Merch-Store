@@ -4,7 +4,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "pages:dev": "wrangler pages dev --live-reload",
+    "pages:dev": "pnpm run build && wrangler pages dev --live-reload",
     "build": "vite build",
     "typecheck": "node ./node_modules/typescript-7/bin/tsc --noEmit",
     "lint": "eslint . --cache --cache-location .eslintcache --cache-strategy content",
@@ -55,7 +55,7 @@
     "typescript": "^6.0.3",
     "typescript-7": "npm:typescript@^7.0.2",
     "typescript-eslint": "^8.72.0",
-    "wrangler": "^4.151.3"
+    "wrangler": "^4.152.0"
   },
   "lint-staged": {
     "src/**/*.{ts,tsx,js,jsx,css,md}": "prettier --write",

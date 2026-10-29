@@ -4,7 +4,7 @@ import { useState } from "react";
 import { SHOP_URL } from "@/lib/api";
 
 const STORAGE_KEY = "ysg-merch-donation-notice:v1";
-const DONATE_URL = `${SHOP_URL}pages/donations`;
+const DONATE_URL = `${SHOP_URL}/pages/donations`;
 
 function readDismissed() {
   try {

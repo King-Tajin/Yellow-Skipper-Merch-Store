@@ -1,8 +1,10 @@
 import { m, AnimatePresence } from "@/lib/motion";
-import { Heart, X } from "lucide-react";
+import { ExternalLink, Heart, X } from "lucide-react";
 import { useState } from "react";
+import { SHOP_URL } from "@/lib/api";
 
 const STORAGE_KEY = "ysg-merch-donation-notice:v1";
+const DONATE_URL = `${SHOP_URL}pages/donations`;
 
 function readDismissed() {
   try {
@@ -35,12 +37,25 @@ export function DonationNotice() {
         >
           <div className="flex items-start gap-3">
             <Heart className="w-5 h-5 mt-0.5 shrink-0 text-tajin-red" />
-            <p className="font-code text-xs sm:text-sm text-gray-300">
-              <span className="text-crown-gold">30% of donations</span> (not
-              purchases) go to the American Society for the Prevention of
-              Cruelty to Animals (ASPCA). The rest goes to the creators of
-              Yellow Skipper Games.
-            </p>
+            <div className="flex flex-col items-start gap-3">
+              <p className="font-code text-xs sm:text-sm text-gray-300">
+                <span className="text-crown-gold">30% of donations</span> (not
+                purchases) go to the American Society for the Prevention of
+                Cruelty to Animals (ASPCA). The rest goes to the creators of
+                Yellow Skipper Games.
+              </p>
+              <a
+                href={DONATE_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-2 px-4 py-2 bg-obsidian-700 pixel-border-sm text-crown-gold hover:bg-obsidian-600 transition-colors"
+              >
+                <span className="font-jakarta text-xs sm:text-sm">
+                  DONATE NOW
+                </span>
+                <ExternalLink className="w-4 h-4 opacity-70" />
+              </a>
+            </div>
           </div>
           <button
             type="button"

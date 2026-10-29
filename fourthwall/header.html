@@ -1,3 +1,49 @@
+<script>
+    (function () {
+        var ALLOWED_ENDINGS = [
+            "/donations",
+            "/privacy",
+            "/privacy-policy",
+            "/terms",
+            "/terms-of-service"
+        ];
+
+        function normalizedPath() {
+            return window.location.pathname.toLowerCase().replace(/\/+$/, "");
+        }
+
+        function isAllowedPage() {
+            var path = normalizedPath();
+            for (var i = 0; i < ALLOWED_ENDINGS.length; i++) {
+                var ending = ALLOWED_ENDINGS[i];
+                if (path.length >= ending.length && path.slice(-ending.length) === ending) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        function update() {
+            document.documentElement.classList.toggle("ysg-portal-off", isAllowedPage());
+        }
+
+        function wrapHistory(method) {
+            var original = history[method];
+            history[method] = function () {
+                var result = original.apply(this, arguments);
+                update();
+                return result;
+            };
+        }
+
+        update();
+        wrapHistory("pushState");
+        wrapHistory("replaceState");
+        window.addEventListener("popstate", update);
+        window.addEventListener("hashchange", update);
+    })();
+</script>
+
 <link href="https://fonts.googleapis.com/css2?family=VT323&family=Share+Tech+Mono&display=swap" rel="stylesheet">
 
 <style>
@@ -9,7 +55,7 @@
         --purple-lo: #28007c;
     }
 
-    #ysg-portal-overlay {
+    html:not(.ysg-portal-off) #ysg-portal-overlay {
         position: fixed !important;
         top: 0 !important;
         left: 0 !important;
@@ -24,7 +70,7 @@
         gap: 60px;
     }
 
-    #ysg-portal-overlay::before {
+    html:not(.ysg-portal-off) #ysg-portal-overlay::before {
         content: '';
         position: absolute;
         inset: 0;
@@ -102,7 +148,7 @@
         transform: scaleX(1);
     }
 
-    body {
+    html:not(.ysg-portal-off) body {
         overflow: hidden !important;
         height: 100vh !important;
     }

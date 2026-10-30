@@ -1,6 +1,6 @@
 YELLOW SKIPPER MERCH STORE PRIVACY POLICY
 
-Last updated: July 2026
+Last updated: October 2026
 
 store.king-tajin.dev is operated by Roland Shikoski.
 
@@ -12,17 +12,25 @@ For questions or data requests contact:
 
 CART (LOCAL STORAGE)
 
-Your shopping cart is stored locally in your browser using localStorage.
-This data never leaves your device and is not accessible to us. It is
-cleared if you clear your browser data.
+Your shopping cart, your dismissal of the donation notice, and a
+short-lived list of items recently found to be unavailable are stored
+locally in your browser using localStorage. This data is not accessible
+to us and is cleared if you clear your browser data. Only the item IDs,
+quantities, and currency in your cart are sent to our server, and only
+when you check out or when the Site checks whether items are still
+available.
 
 ---
 
 BROWSING THE CATALOG
 
 Product listings are fetched from Fourthwall on your behalf through our
-server. Browsing the catalog does not send any personal data to us or
-to Fourthwall beyond a standard request for product information.
+server. Browsing the catalog does not send any personal data to Fourthwall
+beyond a standard request for product information. Like any website, our
+hosting provider (Cloudflare) receives technical information such as your
+IP address and browser type when you load the Site. The Site also loads
+a font from Google Fonts (fonts.googleapis.com), which means your IP
+address is sent to Google when the page loads.
 
 ---
 
@@ -34,9 +42,11 @@ then redirected to Fourthwall (https://fourthwall.king-tajin.dev) to
 complete your purchase. Any personal or payment information you enter
 at checkout - name, address, email, card details, and so on - is
 submitted directly to Fourthwall and governed by their own privacy
-policy. We receive only the order information necessary for
-fulfillment. We do not control or take responsibility for Fourthwall's
-data practices.
+policy (see "PAGES HOSTED ON FOURTHWALL" below). We receive only the
+order information necessary for fulfillment, such as the items ordered
+and the order total. We may use this information to send ourselves an
+order notification. We do not control or take responsibility for
+Fourthwall's data practices.
 
 ---
 
@@ -51,7 +61,24 @@ information see https://www.cloudflare.com/web-analytics/
 
 COOKIES
 
-store.king-tajin.dev does not use cookies.
+store.king-tajin.dev does not use cookies. Pages hosted on Fourthwall
+(see below) may use cookies and other tracking technologies, as described
+in the Fourthwall-hosted privacy policy.
+
+---
+
+PAGES HOSTED ON FOURTHWALL
+
+Some pages are not part of store.king-tajin.dev and are hosted by
+Fourthwall at fourthwall.king-tajin.dev, including checkout, the
+donations page, and the returns and FAQ pages. Those pages have their
+own privacy policy, which applies to anything you do there:
+
+  https://fourthwall.king-tajin.dev/pages/privacy-policy
+
+That policy describes Fourthwall's use of cookies, analytics, and
+advertising technologies, and it takes precedence over this policy for
+Fourthwall-hosted pages. This policy applies to store.king-tajin.dev.
 
 ---
 

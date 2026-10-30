@@ -1,11 +1,12 @@
 <script>
     (function () {
-        var ALLOWED_ENDINGS = [
+        const ALLOWED_ENDINGS = [
             "/donations",
             "/privacy",
             "/privacy-policy",
             "/terms",
-            "/terms-of-service"
+            "/terms-of-service",
+            "/returns-faq"
         ];
 
         function normalizedPath() {
@@ -13,9 +14,9 @@
         }
 
         function isAllowedPage() {
-            var path = normalizedPath();
-            for (var i = 0; i < ALLOWED_ENDINGS.length; i++) {
-                var ending = ALLOWED_ENDINGS[i];
+            const path = normalizedPath();
+            for (let i = 0; i < ALLOWED_ENDINGS.length; i++) {
+                const ending = ALLOWED_ENDINGS[i];
                 if (path.length >= ending.length && path.slice(-ending.length) === ending) {
                     return true;
                 }
@@ -28,9 +29,9 @@
         }
 
         function wrapHistory(method) {
-            var original = history[method];
+            const original = history[method];
             history[method] = function () {
-                var result = original.apply(this, arguments);
+                const result = original.apply(this, arguments);
                 update();
                 return result;
             };
@@ -46,6 +47,7 @@
 
 <link href="https://fonts.googleapis.com/css2?family=VT323&family=Share+Tech+Mono&display=swap" rel="stylesheet">
 
+<!--suppress CssUnusedSymbol -->
 <style>
     :root {
         --gold: #FFD700;
@@ -53,6 +55,10 @@
         --obsidian: #0A0A0A;
         --purple-hi: #5000aa;
         --purple-lo: #28007c;
+    }
+
+    html.ysg-portal-off #ysg-portal-overlay {
+        display: none !important;
     }
 
     html:not(.ysg-portal-off) #ysg-portal-overlay {

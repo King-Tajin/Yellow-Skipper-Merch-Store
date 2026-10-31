@@ -27,7 +27,7 @@ import { ProductModal } from "./ProductModal";
 import { SkeletonCard } from "./SkeletonCard";
 import { StoreError } from "./StoreError";
 import { StoreFooter } from "./StoreFooter";
-import { markUnavailable } from "@/lib/productUtils";
+import { markUnavailable, productPath, slugFromPath } from "@/lib/productUtils";
 import { CURRENCIES } from "@/lib/types";
 import type { CartItem, Currency, FWCollection, FWProduct } from "@/lib/types";
 
@@ -53,9 +53,15 @@ export default function StorePage() {
     "loading"
   );
   const [errorMsg, setErrorMsg] = useState("");
-  const [activeProduct, setActiveProduct] = useState<FWProduct | null>(null);
+  const [activeSlug, setActiveSlug] = useState<string | null>(() =>
+    slugFromPath(window.location.pathname)
+  );
   const [currency, setCurrency] = useState<Currency>("USD");
   const [collections, setCollections] = useState<FWCollection[]>([]);
+  const [collectionsLoaded, setCollectionsLoaded] = useState(false);
+  const [loadedCollections, setLoadedCollections] = useState<
+    FWCollection[] | null
+  >(null);
   const [collectionProducts, setCollectionProducts] = useState<
     Record<string, FWProduct[]>
   >({});
@@ -118,6 +124,17 @@ export default function StorePage() {
     () => unlistedProducts.map((p) => markUnavailable(p, unavailableIds)),
     [unlistedProducts, unavailableIds]
   );
+
+  const activeProduct = useMemo(() => {
+    if (!activeSlug) return null;
+    return (
+      [
+        ...products,
+        ...Object.values(collectionProducts).flat(),
+        ...unlistedProducts,
+      ].find((p) => p.slug === activeSlug) ?? null
+    );
+  }, [activeSlug, products, collectionProducts, unlistedProducts]);
 
   const shownActiveProduct = useMemo(
     () =>
@@ -213,12 +230,8 @@ export default function StorePage() {
         nextCollectionProducts[c.slug] = perCollection[i];
       });
       setCollectionProducts(nextCollectionProducts);
+      setLoadedCollections(collections);
       setStatus("success");
-      setActiveProduct((prev) => {
-        if (!prev) return null;
-        const all = [uncategorized, ...perCollection].flat();
-        return all.find((p) => p.id === prev.id) ?? prev;
-      });
     } catch (err) {
       setErrorMsg(err instanceof Error ? err.message : "Unknown error");
       setStatus("error");
@@ -233,9 +246,62 @@ export default function StorePage() {
 
   useEffect(() => {
     fetchCollections()
-      .then((data) => setCollections(data))
-      .catch(() => {});
+      .then((data) => {
+        setCollections(data);
+        setCollectionsLoaded(true);
+      })
+      .catch(() => {
+        setCollectionsLoaded(true);
+      });
   }, []);
+
+  const openProduct = useCallback((product: FWProduct) => {
+    setActiveSlug(product.slug);
+    window.history.pushState(
+      { ysgProduct: true },
+      "",
+      productPath(product.slug)
+    );
+  }, []);
+
+  const closeProduct = useCallback(() => {
+    const state = window.history.state as { ysgProduct?: boolean } | null;
+    if (state?.ysgProduct) {
+      window.history.back();
+    } else {
+      window.history.replaceState(null, "", "/");
+      setActiveSlug(null);
+    }
+  }, []);
+
+  useEffect(() => {
+    const onPopState = () => {
+      setActiveSlug(slugFromPath(window.location.pathname));
+    };
+    window.addEventListener("popstate", onPopState);
+    return () => window.removeEventListener("popstate", onPopState);
+  }, []);
+
+  useEffect(() => {
+    if (!activeSlug || activeProduct) return;
+    if (
+      status !== "success" ||
+      !collectionsLoaded ||
+      loadedCollections !== collections
+    ) {
+      return;
+    }
+    window.history.replaceState(null, "", "/");
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setActiveSlug(null);
+  }, [
+    activeSlug,
+    activeProduct,
+    status,
+    collectionsLoaded,
+    loadedCollections,
+    collections,
+  ]);
 
   const submitUnlockCode = useCallback(
     async (e: SubmitEvent) => {
@@ -489,7 +555,7 @@ export default function StorePage() {
                 <ProductGrid
                   products={shownProducts}
                   cartItems={cartItems}
-                  onSelect={setActiveProduct}
+                  onSelect={openProduct}
                 />
               )}
 
@@ -508,7 +574,7 @@ export default function StorePage() {
                     <ProductGrid
                       products={items}
                       cartItems={cartItems}
-                      onSelect={setActiveProduct}
+                      onSelect={openProduct}
                     />
                   </div>
                 );
@@ -547,7 +613,7 @@ export default function StorePage() {
               <ProductGrid
                 products={shownUnlistedProducts}
                 cartItems={cartItems}
-                onSelect={setActiveProduct}
+                onSelect={openProduct}
               />
             ) : (
               <p className="font-jakarta text-sm text-gray-500 text-center">
@@ -565,7 +631,7 @@ export default function StorePage() {
           <ProductModal
             key="modal"
             product={shownActiveProduct}
-            onClose={() => setActiveProduct(null)}
+            onClose={closeProduct}
             currency={currency}
             setCurrency={setCurrency}
             cartItems={cartItems}

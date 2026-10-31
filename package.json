@@ -18,7 +18,7 @@
     "autoprefixer": "^10.6.2",
     "dompurify": "^3.4.17",
     "framer-motion": "^12.43.0",
-    "lucide-react": "^1.62.0",
+    "lucide-react": "^1.64.0",
     "postcss": "^8.5.32",
     "react": "^19.3.1",
     "react-dom": "^19.3.1",
@@ -41,7 +41,7 @@
   "devDependencies": {
     "@eslint/compat": "^2.1.1",
     "@eslint/js": "^10.0.1",
-    "@types/node": "^26.6.5",
+    "@types/node": "^26.6.6",
     "@types/react": "^19.3.0",
     "@types/react-dom": "^19.3.0",
     "eslint": "^10.13.0",
@@ -55,7 +55,7 @@
     "typescript": "^6.0.3",
     "typescript-7": "npm:typescript@^7.0.2",
     "typescript-eslint": "^8.72.1",
-    "wrangler": "^4.153.0"
+    "wrangler": "^4.155.0"
   },
   "lint-staged": {
     "src/**/*.{ts,tsx,js,jsx,css,md}": "prettier --write",

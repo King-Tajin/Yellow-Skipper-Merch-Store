@@ -17,6 +17,20 @@ export function formatPrice(price: FWPrice): string {
   return formatter.format(price.value);
 }
 
+export function productPath(slug: string): string {
+  return `/products/${encodeURIComponent(slug)}`;
+}
+
+export function slugFromPath(pathname: string): string | null {
+  const match = /^\/products\/([^/]+)\/?$/.exec(pathname);
+  if (!match) return null;
+  try {
+    return decodeURIComponent(match[1]);
+  } catch {
+    return null;
+  }
+}
+
 export function stripColorStyles(html: string): string {
   return html.replace(
     /(<[^>]+)style="([^"]*)"/gi,

@@ -1,69 +1,14 @@
 // noinspection JSUnusedGlobalSymbols
 // noinspection JSUnresolvedVariable
 
-import {
-  collectionProductsUrl,
-  collectionsUrl,
-  getHandle,
-  getTotal,
-  listFrom,
-} from "../_shared/collections.js";
+import { collectionProductsUrl, getTotal } from "../_shared/collections.js";
 import {
   CORS,
   jsonResponse,
   optionsResponse,
   upstreamErrorResponse,
 } from "../_shared/http.js";
-
-async function fetchCollectionIds(handle, env) {
-  const ids = new Set();
-  const pageSize = 100;
-  let page = 0;
-  let total = Infinity;
-
-  try {
-    while (page * pageSize < total) {
-      const url = collectionProductsUrl(handle, env, { size: pageSize, page });
-      const res = await fetch(url, { method: "GET" });
-      if (!res.ok) break;
-      const json = await res.json();
-      total = getTotal(json);
-      for (const product of json.results ?? []) ids.add(product.id);
-      page += 1;
-    }
-  } catch {
-    return ids;
-  }
-
-  return ids;
-}
-
-async function fetchNamedCollectionHandles(env, unlistedHandle) {
-  try {
-    const res = await fetch(collectionsUrl(env));
-    if (!res.ok) return [];
-    const handles = listFrom(await res.json()).map(getHandle);
-    return handles.filter(
-      (handle) => handle && handle !== "all" && handle !== unlistedHandle
-    );
-  } catch {
-    return [];
-  }
-}
-
-async function fetchExcludedIds(collection, unlistedHandle, env) {
-  const handles =
-    collection === "all"
-      ? [
-          unlistedHandle,
-          ...(await fetchNamedCollectionHandles(env, unlistedHandle)),
-        ]
-      : [unlistedHandle];
-  const idSets = await Promise.all(
-    handles.map((handle) => fetchCollectionIds(handle, env))
-  );
-  return new Set(idSets.flatMap((s) => [...s]));
-}
+import { fetchExcludedIds } from "../_shared/products.js";
 
 export async function onRequestGet(context) {
   const incoming = new URL(context.request.url);

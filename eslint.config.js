@@ -70,7 +70,7 @@ export default tseslint.config(
     languageOptions: {
       ecmaVersion: "latest",
       sourceType: "module",
-      globals: globals.serviceworker,
+      globals: { ...globals.serviceworker, HTMLRewriter: "readonly" },
     },
     rules: {
       "no-unused-vars": ["warn", { argsIgnorePattern: "^_" }],
@@ -79,7 +79,7 @@ export default tseslint.config(
   },
   {
     extends: [js.configs.recommended],
-    files: ["*.js", "*.mjs"],
+    files: ["*.js", "*.mjs", "scripts/**/*.mjs"],
     languageOptions: {
       ecmaVersion: "latest",
       sourceType: "module",

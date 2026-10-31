@@ -28,6 +28,7 @@ import { SkeletonCard } from "./SkeletonCard";
 import { StoreError } from "./StoreError";
 import { StoreFooter } from "./StoreFooter";
 import { markUnavailable, productPath, slugFromPath } from "@/lib/productUtils";
+import { applyProductMeta, resetDocumentMeta } from "@/lib/documentMeta";
 import { CURRENCIES } from "@/lib/types";
 import type { CartItem, Currency, FWCollection, FWProduct } from "@/lib/types";
 
@@ -135,6 +136,14 @@ export default function StorePage() {
       ].find((p) => p.slug === activeSlug) ?? null
     );
   }, [activeSlug, products, collectionProducts, unlistedProducts]);
+
+  useEffect(() => {
+    if (activeProduct) {
+      applyProductMeta(activeProduct);
+    } else {
+      resetDocumentMeta();
+    }
+  }, [activeProduct]);
 
   const shownActiveProduct = useMemo(
     () =>

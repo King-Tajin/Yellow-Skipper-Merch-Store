@@ -1,6 +1,6 @@
 import { m } from "@/lib/motion";
 import { Ban, ShoppingBag, ShoppingCart, Tag } from "lucide-react";
-import { formatPrice, isProductSoldOut } from "@/lib/productUtils";
+import { formatPrice, isProductSoldOut, productPath } from "@/lib/productUtils";
 import type { FWProduct } from "@/lib/types";
 
 export function ProductCard({
@@ -20,7 +20,8 @@ export function ProductCard({
   const soldOut = isProductSoldOut(product);
 
   return (
-    <m.div
+    <m.a
+      href={productPath(product.slug)}
       initial={{ opacity: 0, y: 24 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: index * 0.06, duration: 0.35, ease: "easeOut" }}
@@ -31,16 +32,20 @@ export function ProductCard({
         borderImageSlice: 1,
         borderImageSource: "linear-gradient(180deg, #5000aa 0%, #28007c 100%)",
       }}
-      onClick={onClick}
-      role="button"
-      tabIndex={0}
-      aria-label={`View details for ${product.name}`}
-      onKeyDown={(e) => {
-        if (e.key === "Enter" || e.key === " ") {
-          e.preventDefault();
-          onClick();
+      onClick={(e) => {
+        if (
+          e.metaKey ||
+          e.ctrlKey ||
+          e.shiftKey ||
+          e.altKey ||
+          e.button !== 0
+        ) {
+          return;
         }
+        e.preventDefault();
+        onClick();
       }}
+      aria-label={`View details for ${product.name}`}
       whileHover={{ scale: 1.02 }}
       whileTap={{ scale: 0.98 }}
     >
@@ -121,6 +126,6 @@ export function ProductCard({
           </div>
         )}
       </div>
-    </m.div>
+    </m.a>
   );
 }

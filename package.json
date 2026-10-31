@@ -5,11 +5,11 @@
   "scripts": {
     "dev": "vite",
     "pages:dev": "pnpm run build && wrangler pages dev --live-reload",
-    "build": "vite build",
+    "build": "vite build && node scripts/generate-og-images.mjs",
     "typecheck": "node ./node_modules/typescript-7/bin/tsc --noEmit",
     "lint": "eslint . --cache --cache-location .eslintcache --cache-strategy content",
-    "format": "prettier --write \"src/**/*.{ts,tsx,js,jsx,css,md}\" \"functions/**/*.js\" \"*.{html,json,js,cjs,md}\" \"public/**/*.{html,json}\"",
-    "format:check": "prettier --check \"src/**/*.{ts,tsx,js,jsx,css,md}\" \"functions/**/*.js\" \"*.{html,json,js,cjs,md}\" \"public/**/*.{html,json}\"",
+    "format": "prettier --write \"src/**/*.{ts,tsx,js,jsx,css,md}\" \"functions/**/*.js\" \"*.{html,json,js,cjs,md}\" \"scripts/**/*.mjs\" \"public/**/*.{html,json}\"",
+    "format:check": "prettier --check \"src/**/*.{ts,tsx,js,jsx,css,md}\" \"functions/**/*.js\" \"*.{html,json,js,cjs,md}\" \"scripts/**/*.mjs\" \"public/**/*.{html,json}\"",
     "check": "pnpm run format:check && pnpm run lint && pnpm run typecheck && react-doctor --verbose"
   },
   "dependencies": {
@@ -52,14 +52,16 @@
     "lint-staged": "^17.6.0",
     "prettier": "^3.9.10",
     "react-doctor": "^0.8.3",
+    "sharp": "^0.35.5",
     "typescript": "^6.0.3",
     "typescript-7": "npm:typescript@^7.0.2",
     "typescript-eslint": "^8.72.1",
-    "wrangler": "^4.155.0"
+    "wrangler": "^4.156.0"
   },
   "lint-staged": {
     "src/**/*.{ts,tsx,js,jsx,css,md}": "prettier --write",
     "functions/**/*.js": "prettier --write",
+    "scripts/**/*.mjs": "prettier --write",
     "*.{html,json,js,cjs,md}": "prettier --write",
     "public/**/*.{html,json}": "prettier --write"
   },

@@ -8,8 +8,8 @@
     "build": "vite build && node scripts/generate-og-images.mjs",
     "typecheck": "node ./node_modules/typescript-7/bin/tsc --noEmit",
     "lint": "eslint . --cache --cache-location .eslintcache --cache-strategy content",
-    "format": "prettier --write \"src/**/*.{ts,tsx,js,jsx,css,md}\" \"functions/**/*.js\" \"*.{html,json,js,cjs,md}\" \"scripts/**/*.mjs\" \"public/**/*.{html,json}\"",
-    "format:check": "prettier --check \"src/**/*.{ts,tsx,js,jsx,css,md}\" \"functions/**/*.js\" \"*.{html,json,js,cjs,md}\" \"scripts/**/*.mjs\" \"public/**/*.{html,json}\"",
+    "format": "prettier --write \"src/**/*.{ts,tsx,js,jsx,css,md}\" \"functions/**/*.js\" \"fourthwall/**.html\" \"*.{html,json,js,cjs,md}\" \"scripts/**/*.mjs\" \"public/**/*.{html,json}\"",
+    "format:check": "prettier --check \"src/**/*.{ts,tsx,js,jsx,css,md}\" \"functions/**/*.js\" \"fourthwall/**.html\" \"*.{html,json,js,cjs,md}\" \"scripts/**/*.mjs\" \"public/**/*.{html,json}\"",
     "check": "pnpm run format:check && pnpm run lint && pnpm run typecheck && react-doctor --verbose"
   },
   "dependencies": {
@@ -18,7 +18,7 @@
     "autoprefixer": "^10.6.2",
     "dompurify": "^3.4.17",
     "framer-motion": "^12.43.0",
-    "lucide-react": "^1.64.0",
+    "lucide-react": "^1.65.0",
     "postcss": "^8.5.32",
     "react": "^19.3.1",
     "react-dom": "^19.3.1",

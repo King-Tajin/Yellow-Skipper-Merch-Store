@@ -22,6 +22,7 @@
     "postcss": "^8.5.32",
     "react": "^19.3.1",
     "react-dom": "^19.3.1",
+    "sharp": "^0.35.5",
     "tailwindcss": "^4.3.3",
     "vite": "^8.3.5",
     "vite-plugin-svgr": "^5.2.0"
@@ -52,7 +53,6 @@
     "lint-staged": "^17.6.0",
     "prettier": "^3.9.10",
     "react-doctor": "^0.8.3",
-    "sharp": "^0.35.5",
     "typescript": "^6.0.3",
     "typescript-7": "npm:typescript@^7.0.2",
     "typescript-eslint": "^8.72.1",

@@ -100,6 +100,7 @@ async function main() {
     console.warn("FW_TOKEN not set, skipping product og card generation");
     return;
   }
+  const startedAt = performance.now();
   try {
     const stats = await generateOgImages({
       env: {
@@ -108,8 +109,9 @@ async function main() {
       },
       outDir: path.join(root, "dist", "og"),
     });
+    const seconds = ((performance.now() - startedAt) / 1000).toFixed(2);
     console.log(
-      `og cards: ${stats.written} written, ${stats.failed} failed, ${stats.skipped} without image`
+      `og cards: ${stats.written} written, ${stats.failed} failed, ${stats.skipped} without image in ${seconds}s`
     );
   } catch (error) {
     console.warn(`og card generation skipped: ${error.message}`);

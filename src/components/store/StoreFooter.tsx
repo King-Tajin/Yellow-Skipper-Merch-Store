@@ -22,13 +22,13 @@ export function StoreFooter() {
         </p>
         <div className="flex items-center justify-center gap-3 mt-2">
           <a
-            href="/privacy.html"
+            href="/privacy"
             className="font-code text-[9px] sm:text-[10px] text-gray-600 hover:text-crown-gold transition-colors underline"
           >
             Privacy Policy
           </a>
           <a
-            href="/terms.html"
+            href="/terms"
             className="font-code text-[9px] sm:text-[10px] text-gray-600 hover:text-crown-gold transition-colors underline"
           >
             Terms of Service

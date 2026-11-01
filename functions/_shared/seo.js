@@ -201,13 +201,6 @@ export function productMeta(product, { hasOgCard = false } = {}) {
   };
 }
 
-export function notFoundMeta() {
-  return {
-    robots: "noindex, follow",
-    url: `${SITE_ORIGIN}/`,
-  };
-}
-
 export function productFallbackHtml(product, image, range) {
   const parts = [`<h1>${escapeHtml(product.name)}</h1>`];
   if (image && image !== DEFAULT_IMAGE) {

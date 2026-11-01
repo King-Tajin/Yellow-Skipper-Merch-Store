@@ -43,3 +43,20 @@ export function optionsResponse(methods) {
     },
   });
 }
+
+/**
+ * @param {{ ASSETS: { fetch: (input: URL | Request | string, init?: RequestInit) => Promise<Response> } }} env
+ * @param {Request} request
+ * @param {string} path
+ * @returns {Promise<Response>}
+ */
+export async function fetchAsset(env, request, path) {
+  let res = await env.ASSETS.fetch(new URL(path, request.url));
+  if (res.status >= 300 && res.status < 400) {
+    const redirectTo = res.headers.get("Location");
+    if (redirectTo) {
+      res = await env.ASSETS.fetch(new URL(redirectTo, request.url));
+    }
+  }
+  return res;
+}

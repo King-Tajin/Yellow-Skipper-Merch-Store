@@ -24,6 +24,14 @@ function productEntry(product) {
   </url>`;
 }
 
+const STATIC_PATHS = ["/privacy", "/terms"];
+
+function staticEntry(path) {
+  return `  <url>
+    <loc>${SITE_ORIGIN}${path}</loc>
+  </url>`;
+}
+
 export async function onRequestGet(context) {
   let products;
   try {
@@ -35,7 +43,10 @@ export async function onRequestGet(context) {
     });
   }
 
-  const entries = products.map(productEntry).join("\n");
+  const entries = [
+    ...STATIC_PATHS.map(staticEntry),
+    ...products.map(productEntry),
+  ].join("\n");
   const body = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
   <url>

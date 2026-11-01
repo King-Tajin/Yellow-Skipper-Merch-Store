@@ -1,12 +1,8 @@
 // noinspection JSUnusedGlobalSymbols,JSCheckFunctionSignatures
 
+import { fetchAsset } from "../_shared/http.js";
 import { getListedProducts } from "../_shared/products.js";
-import {
-  applyMeta,
-  notFoundMeta,
-  ogCardPath,
-  productMeta,
-} from "../_shared/seo.js";
+import { applyMeta, ogCardPath, productMeta } from "../_shared/seo.js";
 
 function readSlug(params) {
   const raw = Array.isArray(params.slug) ? params.slug[0] : params.slug;
@@ -28,8 +24,19 @@ async function hasOgCard(context, slug) {
   }
 }
 
+async function notFoundPage(context) {
+  const res = await fetchAsset(context.env, context.request, "/404.html");
+  if (!res.ok) return new Response("Page not found", { status: 404 });
+  const response = new Response(res.body, {
+    status: 404,
+    headers: res.headers,
+  });
+  response.headers.set("Cache-Control", "no-cache");
+  return response;
+}
+
 export async function onRequestGet(context) {
-  const page = await context.next();
+  const page = await fetchAsset(context.env, context.request, "/");
 
   let products;
   try {
@@ -40,9 +47,11 @@ export async function onRequestGet(context) {
 
   const slug = readSlug(context.params);
   const product = products.find((p) => p.slug === slug);
-  const meta = product
-    ? productMeta(product, { hasOgCard: await hasOgCard(context, slug) })
-    : notFoundMeta();
+  if (!product) return notFoundPage(context);
+
+  const meta = productMeta(product, {
+    hasOgCard: await hasOgCard(context, slug),
+  });
   const response = applyMeta(page, meta);
   response.headers.set("Cache-Control", "no-cache");
   return response;

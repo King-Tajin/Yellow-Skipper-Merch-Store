@@ -1,0 +1,390 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover"
+    />
+    <meta name="robots" content="noindex" />
+    <meta name="theme-color" content="#0a0a0a" />
+    <title>Page not found | Yellow Skipper Merch Store</title>
+    <!-- noinspection HtmlUnknownTarget -->
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg: #0a0a0a;
+        --panel: #111108;
+        --text: #f2f2ee;
+        --muted: #a8a8a0;
+        --accent: #f5c518;
+        --frame: #5000aa;
+        --line: #2a2a22;
+        --grid: #181508;
+        box-sizing: border-box;
+        padding-top: env(safe-area-inset-top, 0px);
+        padding-bottom: env(safe-area-inset-bottom, 0px);
+        color-scheme: dark;
+      }
+      html {
+        height: 100%;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        min-height: 100%;
+        margin: 0;
+        background-color: var(--bg);
+        background-image:
+          linear-gradient(var(--grid) 1px, transparent 1px),
+          linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+        background-size: 16px 16px;
+        color: var(--text);
+        font-family:
+          "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas,
+          monospace;
+        font-size: 16px;
+        line-height: 1.7;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 16px;
+      }
+      .frame {
+        width: 100%;
+        max-width: 720px;
+        border: 6px solid var(--frame);
+        background: var(--panel);
+      }
+      .bar {
+        padding: 8px 14px;
+        border-bottom: 1px solid var(--line);
+        color: var(--muted);
+        font-size: 12px;
+        overflow-x: auto;
+        white-space: nowrap;
+      }
+      .body {
+        padding: 28px 24px 32px;
+      }
+      .body p {
+        margin: 0;
+        overflow-wrap: anywhere;
+      }
+      .ascii {
+        margin: 0 0 20px;
+        font-family:
+          ui-monospace, "SFMono-Regular", Menlo, Consolas, "DejaVu Sans Mono",
+          monospace;
+        font-size: calc(1.4 * clamp(8px, 3.2vw, 20px));
+        line-height: 1.1;
+        color: var(--accent);
+        white-space: pre;
+      }
+      .sr {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        overflow: hidden;
+        clip: rect(0 0 0 0);
+        white-space: nowrap;
+      }
+      .dim {
+        color: var(--muted);
+      }
+      .hit {
+        color: var(--accent);
+        font-weight: 500;
+      }
+      .gap {
+        margin-top: 20px;
+      }
+      [data-err] {
+        color: #ff7a6b;
+      }
+      a {
+        color: var(--text);
+        text-decoration: underline;
+        text-underline-offset: 3px;
+      }
+      a:hover,
+      a:focus-visible {
+        color: var(--accent);
+        outline: none;
+      }
+      .term-area {
+        margin-top: 20px;
+      }
+      .prompt {
+        position: relative;
+        cursor: text;
+      }
+      .typed {
+        white-space: pre-wrap;
+        word-break: break-all;
+      }
+      .cur {
+        color: inherit;
+        outline: 1px solid var(--accent);
+        outline-offset: -1px;
+      }
+      .prompt.on .cur {
+        background: var(--accent);
+        color: var(--bg);
+        outline: 0;
+        animation: blink 1.1s steps(1) infinite;
+      }
+      @keyframes blink {
+        50% {
+          background: transparent;
+          color: var(--text);
+          outline: 1px solid var(--accent);
+          outline-offset: -1px;
+        }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .prompt.on .cur {
+          animation: none;
+        }
+      }
+      .ghost {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        padding: 0;
+        border: 0;
+        opacity: 0;
+        font-size: 16px;
+        cursor: text;
+      }
+    </style>
+  </head>
+  <body>
+    <main class="frame" id="term">
+      <div class="bar" id="bar">store.king-tajin.dev</div>
+      <div class="body">
+        <h1 class="sr">404 page not found</h1>
+        <pre class="ascii" aria-hidden="true">
+4   4   000   4   4
+4   4  0   0  4   4
+44444  0   0  44444
+    4  0   0      4
+    4   000       4</pre>
+        <p class="dim">$ get <span id="path">/products/nope</span></p>
+        <p class="hit">404 no such page</p>
+        <p class="dim gap">try one of these:</p>
+        <p>&gt; <a href="/">browse all merch</a></p>
+        <p>&gt; <a href="/">go to home</a></p>
+        <p>&gt; <a href="https://vagudle.king-tajin.dev/">play vagudle</a></p>
+        <div class="term-area">
+          <div id="log" aria-live="polite"></div>
+          <div class="prompt" id="prompt">
+            <span class="dim">$&nbsp;</span
+            ><span class="typed"
+              ><span id="before"></span><span class="cur" id="cur"></span
+              ><span id="after"></span
+            ></span>
+            <input
+              class="ghost"
+              id="cmd"
+              type="text"
+              spellcheck="false"
+              autocapitalize="none"
+              autocomplete="off"
+              aria-label="Command"
+            />
+          </div>
+        </div>
+      </div>
+    </main>
+    <script>
+      (() => {
+        const path = location.pathname;
+        if (
+          path &&
+          path !== "/" &&
+          !/\.html$/.test(path) &&
+          !/^\/outputs\//.test(path)
+        ) {
+          document.querySelector("#path").textContent = path;
+          document.querySelector("#bar").textContent =
+            "store.king-tajin.dev" + path;
+        }
+      })();
+
+      (() => {
+        const input = /** @type {HTMLInputElement} */ (
+          document.querySelector("input.ghost")
+        );
+        const log = document.querySelector("#log");
+        const promptRow = document.querySelector("#prompt");
+        const before = document.querySelector("#before");
+        const cur = document.querySelector("#cur");
+        const after = document.querySelector("#after");
+
+        const RM_DEFAULTS = [
+          "/bin",
+          "/etc",
+          "/products",
+          "/cart",
+          "/everything",
+        ];
+        const RM_SHORT = "firRdvI";
+        const RM_LONG = [
+          "--force",
+          "--interactive",
+          "--recursive",
+          "--dir",
+          "--verbose",
+          "--preserve-root",
+          "--no-preserve-root",
+        ];
+        const EXIT_ERROR =
+          "error: There is no escape. We all go eventually, and existence is meaningless.";
+
+        input.setAttribute("autocorrect", "off");
+
+        function render() {
+          const value = input.value;
+          const pos = input.selectionStart ?? value.length;
+          before.textContent = value.slice(0, pos);
+          cur.textContent = value.charAt(pos) || "\u00a0";
+          after.textContent = value.slice(pos + 1);
+          promptRow.classList.toggle("on", document.activeElement === input);
+        }
+
+        function later() {
+          requestAnimationFrame(render);
+        }
+
+        function say(text, cls) {
+          const el = document.createElement("p");
+          el.className = cls || "dim";
+          el.textContent = text;
+          log.appendChild(el);
+          el.scrollIntoView({ block: "nearest" });
+          return el;
+        }
+
+        function sayError(text) {
+          say(text).dataset.err = "true";
+          promptRow.scrollIntoView({ block: "nearest" });
+        }
+
+        function parseRm(args) {
+          const paths = [];
+          let optionsDone = false;
+          for (const arg of args) {
+            if (!optionsDone && arg === "--") {
+              optionsDone = true;
+            } else if (!optionsDone && arg.startsWith("--")) {
+              if (!RM_LONG.includes(arg)) {
+                return { error: `rm: unrecognized option '${arg}'` };
+              }
+            } else if (!optionsDone && arg.length > 1 && arg.startsWith("-")) {
+              for (const letter of arg.slice(1)) {
+                if (!RM_SHORT.includes(letter)) {
+                  return { error: `rm: invalid option -- '${letter}'` };
+                }
+              }
+            } else {
+              paths.push(arg);
+            }
+          }
+          if (paths.length === 0) return { error: "rm: missing operand" };
+          return { paths: paths.slice(0, 5) };
+        }
+
+        function rmLines(paths) {
+          const rest = RM_DEFAULTS.filter((dir) => !paths.includes(dir));
+          const targets = [...paths, ...rest, "/your-existence"];
+          const lines = targets.map((target, i) => ({
+            text: `removing ${target} ...`,
+            wait: i === targets.length - 1 ? 1100 : 450,
+          }));
+          lines.push({
+            text: "Just kidding. You are safe (for now).",
+            cls: "hit",
+            wait: 0,
+          });
+          return lines;
+        }
+
+        function play(lines) {
+          let i = 0;
+          promptRow.hidden = true;
+          input.readOnly = true;
+          const next = () => {
+            if (i >= lines.length) {
+              promptRow.hidden = false;
+              input.readOnly = false;
+              input.focus();
+              render();
+              promptRow.scrollIntoView({ block: "nearest" });
+              return;
+            }
+            const line = lines[i];
+            i += 1;
+            say(line.text, line.cls);
+            setTimeout(next, line.wait);
+          };
+          next();
+        }
+
+        document.querySelector("#term").addEventListener("click", (e) => {
+          if (e.target instanceof Element && e.target.closest("a")) return;
+          input.focus();
+          later();
+        });
+
+        ["input", "keyup", "click", "select", "focus", "blur"].forEach(
+          (name) => {
+            input.addEventListener(name, render);
+          }
+        );
+
+        input.addEventListener("keydown", (e) => {
+          if (e.key !== "Enter") {
+            later();
+            return;
+          }
+          const value = input.value;
+          say("$ " + value);
+          input.value = "";
+          render();
+          const cmd = value.trim();
+          if (!cmd) return;
+          const parts = cmd.split(/\s+/);
+          const first = parts[0].toLowerCase();
+          const second = (parts[1] || "").toLowerCase();
+          if (first === "sudo" && second === "rm") {
+            const result = parseRm(parts.slice(2));
+            if (result.error) {
+              sayError(result.error);
+            } else {
+              play(rmLines(result.paths));
+            }
+          } else if (first === "exit") {
+            sayError(EXIT_ERROR);
+          } else {
+            sayError("command not found: " + parts[0]);
+          }
+        });
+
+        document.addEventListener("selectionchange", () => {
+          if (document.activeElement === input) render();
+        });
+
+        render();
+      })();
+    </script>
+  </body>
+</html>

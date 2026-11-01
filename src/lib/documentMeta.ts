@@ -6,7 +6,7 @@ const SITE_NAME = "Yellow Skipper Merch Store";
 const SITE_TITLE =
   "Yellow Skipper Merch Store | Official Yellow Skipper Games Merch";
 const SITE_DESCRIPTION =
-  "Official Yellow Skipper Games merch. Shop apparel, accessories and more straight from the studio behind Vagudle.";
+  "Official Yellow Skipper Games merch. Shop apparel, accessories and more from the studio behind Vagudle.";
 const DEFAULT_IMAGE = `${SITE_ORIGIN}/og-default.png`;
 const MAX_DESCRIPTION = 160;
 

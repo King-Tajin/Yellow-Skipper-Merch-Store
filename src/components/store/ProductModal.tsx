@@ -2,7 +2,6 @@ import { m, AnimatePresence } from "@/lib/motion";
 import {
   Ban,
   ChevronDown,
-  Crown,
   ExternalLink,
   Ruler,
   ShoppingCart,
@@ -11,6 +10,7 @@ import {
 } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { SHOP_URL } from "@/lib/api";
+import PropellerHat from "@/assets/icons/propeller-hat.svg?react";
 import { CollapsibleSection } from "./CollapsibleSection";
 import { ImageLightbox } from "./ImageLightbox";
 import { ProductGallery } from "./ProductGallery";
@@ -158,7 +158,7 @@ export function ProductModal({
             style={{ background: "rgba(10,0,20,0.97)" }}
           >
             <div className="flex items-center gap-3">
-              <Crown className="w-8 h-8 text-crown-gold" />
+              <PropellerHat className="w-8 h-8" />
               <span className="font-jakarta text-base text-crown-amber tracking-widest">
                 PRODUCT DETAILS
               </span>

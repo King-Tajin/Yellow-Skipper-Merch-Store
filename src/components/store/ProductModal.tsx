@@ -258,21 +258,20 @@ export function ProductModal({
                 />
               )}
 
-              {(product.additionalInformation ?? [])
-                .filter(
-                  (section) =>
-                    section.type === "MORE_DETAILS" ||
-                    section.type === "GUARANTEE_AND_RETURNS"
-                )
-                .map((section) => (
-                  <CollapsibleSection
-                    key={section.type}
-                    title={section.title.toUpperCase()}
-                    html={section.bodyHtml}
-                    isOpen={descExpanded === section.type}
-                    onToggle={() => toggleSection(section.type)}
-                  />
-                ))}
+              {(product.additionalInformation ?? []).flatMap((section) =>
+                section.type === "MORE_DETAILS" ||
+                section.type === "GUARANTEE_AND_RETURNS"
+                  ? [
+                      <CollapsibleSection
+                        key={section.type}
+                        title={section.title.toUpperCase()}
+                        html={section.bodyHtml}
+                        isOpen={descExpanded === section.type}
+                        onToggle={() => toggleSection(section.type)}
+                      />,
+                    ]
+                  : []
+              )}
 
               {!isSingleVariant && (
                 <div className="flex flex-col gap-4">

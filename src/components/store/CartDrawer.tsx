@@ -59,13 +59,15 @@ export function CartDrawer({
       window.open(url, "_blank", "noopener,noreferrer");
     } catch (err) {
       if (err instanceof UnavailableItemsError && err.variantIds.length > 0) {
-        const names = items
-          .filter((i) => err.variantIds.includes(i.variantId))
-          .map((i) =>
-            [i.productName, i.variantColor, i.variantSize]
+        const names: string[] = [];
+        for (const item of items) {
+          if (!err.variantIds.includes(item.variantId)) continue;
+          names.push(
+            [item.productName, item.variantColor, item.variantSize]
               .filter(Boolean)
               .join(" / ")
           );
+        }
         setCheckoutError(
           `Sold out and removed from your cart: ${names.join(", ")}`
         );

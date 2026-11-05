@@ -61,11 +61,13 @@ export function toLastmod(value) {
 }
 
 export function latestLastmod(values) {
-  const times = values
-    .map((value) => new Date(value ?? "").getTime())
-    .filter((time) => !Number.isNaN(time));
-  if (times.length === 0) return null;
-  return new Date(Math.max(...times)).toISOString();
+  let latest = -Infinity;
+  for (const value of values) {
+    const time = new Date(value ?? "").getTime();
+    if (!Number.isNaN(time) && time > latest) latest = time;
+  }
+  if (latest === -Infinity) return null;
+  return new Date(latest).toISOString();
 }
 
 export function parseLastUpdated(text) {
@@ -169,9 +171,11 @@ export function isProductSoldOut(product) {
 }
 
 function priceRange(product) {
-  const prices = (product.variants ?? [])
-    .map((v) => v.unitPrice)
-    .filter((p) => p && typeof p.value === "number");
+  const prices = [];
+  for (const variant of product.variants ?? []) {
+    const price = variant.unitPrice;
+    if (price && typeof price.value === "number") prices.push(price);
+  }
   if (prices.length === 0) return null;
   const values = prices.map((p) => p.value);
   return {

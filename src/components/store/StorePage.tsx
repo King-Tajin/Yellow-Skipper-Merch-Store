@@ -186,8 +186,10 @@ export default function StorePage() {
   );
 
   useEffect(() => {
+    // Re-checking stored sold-out items on mount updates state after a network call.
     // eslint-disable-next-line react-hooks/set-state-in-effect
     void recheckUnavailable(Object.keys(loadUnavailable()));
+    // This check is meant to run once on mount, not whenever recheckUnavailable changes.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -305,6 +307,7 @@ export default function StorePage() {
       return;
     }
     window.history.replaceState(null, "", "/");
+    // Clearing an unknown product slug has to happen after the product list finishes loading.
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setActiveSlug(null);
   }, [
@@ -346,6 +349,7 @@ export default function StorePage() {
         setUnlistedProducts(data);
       })
       .catch(() => {});
+    // Unlisted products should reload only when the currency changes, not on every unlock code edit.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currency]);
 

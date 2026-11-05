@@ -187,7 +187,7 @@
         <div class="term-area">
           <div id="log" aria-live="polite"></div>
           <div class="prompt" id="prompt">
-            <span class="dim">$&nbsp;</span
+            <span class="dim" id="ps">$&nbsp;</span
             ><span class="typed"
               ><span id="before"></span><span class="cur" id="cur"></span
               ><span id="after"></span
@@ -228,6 +228,7 @@
         const promptRow = document.querySelector("#prompt");
         const before = document.querySelector("#before");
         const cur = document.querySelector("#cur");
+        const ps = document.querySelector("#ps");
         const after = document.querySelector("#after");
 
         const RM_DEFAULTS = [
@@ -241,20 +242,45 @@
         const RM_LONG = [
           "--force",
           "--interactive",
+          "--one-file-system",
           "--recursive",
           "--dir",
           "--verbose",
           "--preserve-root",
           "--no-preserve-root",
+          "--help",
         ];
+        const RM_FAKE_DIRS = ["/", ...RM_DEFAULTS];
+        const RM_TRY = "Try 'rm --help' for more information.";
+        const SUDO_USAGE = [
+          "usage: sudo -h | -K | -k | -V",
+          "usage: sudo [-u user] [-i | -s] [command [arg ...]]",
+        ];
+        const RM_HELP = [
+          "Usage: rm [OPTION]... [FILE]...",
+          "Remove (unlink) the FILE(s).",
+          "",
+          "  -f, --force           ignore nonexistent files and arguments, never prompt",
+          "  -i                    prompt before every removal",
+          "  -r, -R, --recursive   remove directories and their contents recursively",
+          "  -d, --dir             remove empty directories",
+          "  -v, --verbose         explain what is being done",
+          "      --help        display this help and exit",
+        ].join("\n");
+        const SUDO_PROMPT = "[sudo] password for root:\u00a0";
+        const SHELL_PROMPT = "$\u00a0";
         const EXIT_ERROR =
           "error: There is no escape. We all die eventually, and existence is meaningless.";
 
         input.setAttribute("autocorrect", "off");
 
+        let password = null;
+
         function render() {
-          const value = input.value;
-          const pos = input.selectionStart ?? value.length;
+          const value = password ? "" : input.value;
+          const pos = password
+            ? 0
+            : (input.selectionStart ?? input.value.length);
           before.textContent = value.slice(0, pos);
           cur.textContent = value.charAt(pos) || "\u00a0";
           after.textContent = value.slice(pos + 1);
@@ -281,26 +307,108 @@
 
         function parseRm(args) {
           const paths = [];
+          const flags = { recursive: false, force: false, noPreserve: false };
           let optionsDone = false;
           for (const arg of args) {
             if (!optionsDone && arg === "--") {
               optionsDone = true;
             } else if (!optionsDone && arg.startsWith("--")) {
-              if (!RM_LONG.includes(arg)) {
+              const name = arg.split("=")[0];
+              if (!RM_LONG.includes(name)) {
                 return { error: `rm: unrecognized option '${arg}'` };
               }
+              if (arg.includes("=") && name !== "--interactive") {
+                return {
+                  error: `rm: option '${name}' doesn't allow an argument`,
+                };
+              }
+              if (name === "--help") return { help: true };
+              if (name === "--recursive" || name === "--dir") {
+                flags.recursive = true;
+              }
+              if (name === "--force") flags.force = true;
+              if (name === "--no-preserve-root") flags.noPreserve = true;
             } else if (!optionsDone && arg.length > 1 && arg.startsWith("-")) {
               for (const letter of arg.slice(1)) {
                 if (!RM_SHORT.includes(letter)) {
                   return { error: `rm: invalid option -- '${letter}'` };
                 }
+                if ("rRd".includes(letter)) flags.recursive = true;
+                if (letter === "f") flags.force = true;
               }
             } else {
               paths.push(arg);
             }
           }
           if (paths.length === 0) return { error: "rm: missing operand" };
-          return { paths: paths.slice(0, 5) };
+          return { paths: paths.slice(0, 5), ...flags };
+        }
+
+        function rmFail(error) {
+          sayError(error);
+          sayError(RM_TRY);
+        }
+
+        function rmDenied(result) {
+          for (const target of result.paths) {
+            const normal =
+              target.replace(/\/+$/, "") || (target.startsWith("/") ? "/" : "");
+            if (normal === "/" && result.recursive && !result.noPreserve) {
+              sayError("rm: it is dangerous to operate recursively on '/'");
+              sayError("rm: use --no-preserve-root to override this failsafe");
+            } else if (RM_FAKE_DIRS.includes(normal)) {
+              sayError(`rm: cannot remove '${target}': Permission denied`);
+            } else if (!result.force) {
+              sayError(
+                `rm: cannot remove '${target}': No such file or directory`
+              );
+            }
+          }
+        }
+
+        function askPassword(onDone) {
+          password = { attempts: 0, onDone };
+          ps.textContent = SUDO_PROMPT;
+          input.type = "password";
+          render();
+        }
+
+        function endPassword() {
+          password = null;
+          ps.textContent = SHELL_PROMPT;
+          input.type = "text";
+          render();
+        }
+
+        function submitPassword() {
+          const value = input.value;
+          input.value = "";
+          say(SUDO_PROMPT);
+          if (value) {
+            const { onDone } = password;
+            endPassword();
+            onDone();
+            return;
+          }
+          password.attempts += 1;
+          if (password.attempts >= 3) {
+            endPassword();
+            sayError("sudo: 3 incorrect password attempts");
+          } else {
+            sayError("Sorry, try again.");
+            render();
+          }
+        }
+
+        function runSudoRm(args) {
+          const result = parseRm(args);
+          if (result.help) {
+            say(RM_HELP, "dim help");
+          } else if (result.error) {
+            rmFail(result.error);
+          } else {
+            play(rmLines(result.paths));
+          }
         }
 
         function rmLines(paths) {
@@ -356,6 +464,10 @@
             later();
             return;
           }
+          if (password) {
+            submitPassword();
+            return;
+          }
           const value = input.value;
           say("$ " + value);
           input.value = "";
@@ -363,19 +475,27 @@
           const cmd = value.trim();
           if (!cmd) return;
           const parts = cmd.split(/\s+/);
-          const first = parts[0].toLowerCase();
-          const second = (parts[1] || "").toLowerCase();
+          const first = parts[0];
+          const second = parts[1] || "";
           if (first === "sudo" && second === "rm") {
-            const result = parseRm(parts.slice(2));
-            if (result.error) {
-              sayError(result.error);
+            askPassword(() => runSudoRm(parts.slice(2)));
+          } else if (first === "sudo" && second) {
+            sayError(`sudo: ${second}: command not found`);
+          } else if (first === "sudo") {
+            SUDO_USAGE.forEach(sayError);
+          } else if (first === "rm") {
+            const result = parseRm(parts.slice(1));
+            if (result.help) {
+              say(RM_HELP, "dim help");
+            } else if (result.error) {
+              rmFail(result.error);
             } else {
-              play(rmLines(result.paths));
+              rmDenied(result);
             }
           } else if (first === "exit") {
             sayError(EXIT_ERROR);
           } else {
-            sayError("command not found: " + parts[0]);
+            sayError(`bash: ${first}: command not found`);
           }
         });
 

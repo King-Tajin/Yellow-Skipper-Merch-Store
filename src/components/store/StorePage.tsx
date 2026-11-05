@@ -27,6 +27,7 @@ import { ProductModal } from "./ProductModal";
 import { SkeletonCard } from "./SkeletonCard";
 import { StoreError } from "./StoreError";
 import { StoreFooter } from "./StoreFooter";
+import { Turnstile } from "./Turnstile";
 import { markUnavailable, productPath, slugFromPath } from "@/lib/productUtils";
 import { applyProductMeta, resetDocumentMeta } from "@/lib/documentMeta";
 import { CURRENCIES } from "@/lib/types";
@@ -34,6 +35,7 @@ import type { CartItem, Currency, FWCollection, FWProduct } from "@/lib/types";
 
 const UNAVAILABLE_KEY = "ysg-merch-unavailable:v1";
 const UNAVAILABLE_TTL_MS = 30 * 60 * 1000;
+const TURNSTILE_SITE_KEY = import.meta.env.VITE_TURNSTILE_SITE_KEY;
 
 function loadUnavailable(): Record<string, number> {
   try {
@@ -86,6 +88,8 @@ export default function StorePage() {
     "idle" | "loading" | "error" | "success"
   >("idle");
   const [unlockError, setUnlockError] = useState("");
+  const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
+  const [turnstileReset, setTurnstileReset] = useState(0);
   const [unlistedProducts, setUnlistedProducts] = useState<FWProduct[]>([]);
 
   useEffect(() => {
@@ -318,15 +322,21 @@ export default function StorePage() {
       setUnlockStatus("loading");
       setUnlockError("");
       try {
-        const data = await fetchUnlistedProducts(unlockCode, currency);
+        const data = await fetchUnlistedProducts(
+          unlockCode,
+          currency,
+          turnstileToken ?? undefined
+        );
         setUnlistedProducts(data);
         setUnlockStatus("success");
       } catch (err) {
         setUnlockError(err instanceof Error ? err.message : "Unknown error");
         setUnlockStatus("error");
+        setTurnstileToken(null);
+        setTurnstileReset((n) => n + 1);
       }
     },
-    [unlockCode, currency]
+    [unlockCode, currency, turnstileToken]
   );
 
   useEffect(() => {
@@ -479,7 +489,7 @@ export default function StorePage() {
               <Lock className="w-6 h-6" />
             )}
             <span className="font-jakarta text-base">
-              {unlockStatus === "success" ? "UNLOCKED" : "HAVE A CODE?"}
+              {unlockStatus === "success" ? "UNLOCKED" : "ACCESS CODE"}
             </span>
           </button>
         </m.div>
@@ -508,11 +518,22 @@ export default function StorePage() {
             />
             <button
               type="submit"
-              disabled={unlockStatus === "loading" || unlockCode === ""}
+              disabled={
+                unlockStatus === "loading" ||
+                unlockCode === "" ||
+                turnstileToken === null
+              }
               className="px-4 py-2.5 bg-crown-gold/10 border border-crown-gold/50 hover:border-crown-gold text-crown-gold font-jakarta text-xs transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {unlockStatus === "loading" ? "CHECKING..." : "UNLOCK"}
             </button>
+            {TURNSTILE_SITE_KEY && (
+              <Turnstile
+                siteKey={TURNSTILE_SITE_KEY}
+                onToken={setTurnstileToken}
+                resetSignal={turnstileReset}
+              />
+            )}
             {unlockStatus === "error" && (
               <span className="font-code text-xs text-tajin-red w-full text-center sm:w-auto">
                 {unlockError}

@@ -1,6 +1,7 @@
 // noinspection JSUnusedGlobalSymbols
 // noinspection JSUnresolvedVariable
 
+import { guardUnlistedVariants } from "../_shared/access.js";
 import { postCart, probeVariants, readCartRequest } from "../_shared/cart.js";
 import { ok, optionsResponse, parseJson } from "../_shared/http.js";
 
@@ -13,6 +14,13 @@ export async function onRequestPost(context) {
   if (input.error) return ok({ ok: false, error: input.error });
 
   const { currency, list: items } = input;
+
+  const denied = await guardUnlistedVariants(
+    context.request,
+    context.env,
+    items.map((item) => item?.variantId)
+  );
+  if (denied) return denied;
 
   let cartRes, cartText;
   try {

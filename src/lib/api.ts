@@ -89,7 +89,8 @@ export async function fetchCollections(): Promise<FWCollection[]> {
 
 export async function fetchUnlistedProducts(
   code: string,
-  currency: Currency
+  currency: Currency,
+  turnstileToken?: string
 ): Promise<FWProduct[]> {
   const pageSize = 50;
 
@@ -97,9 +98,17 @@ export async function fetchUnlistedProducts(
     const res = await fetch("/api/unlisted", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ code, size: pageSize, page, currency }),
+      body: JSON.stringify({
+        code,
+        size: pageSize,
+        page,
+        currency,
+        turnstileToken,
+      }),
     });
     if (res.status === 401) throw new Error("Invalid code");
+    if (res.status === 403) throw new Error("Verification failed, try again");
+    if (res.status === 503) throw new Error("Verification unavailable");
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     return (await res.json()) as StoreResponse;
   };

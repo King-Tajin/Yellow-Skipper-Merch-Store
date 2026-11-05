@@ -63,7 +63,7 @@ export async function fetchExcludedIds(collection, unlistedHandle, env) {
         ]
       : [unlistedHandle];
   const idSets = await Promise.all(
-    handles.map((handle) => fetchCollectionIds(handle, env))
+    handles.map((handle) => fetchCollectionIds(handle, env, { strict: true }))
   );
   return new Set(idSets.flatMap((s) => [...s]));
 }

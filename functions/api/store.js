@@ -23,10 +23,15 @@ export async function onRequestGet(context) {
     currency: incoming.searchParams.get("currency") ?? "USD",
   });
 
-  const [fwRes, excludeIds] = await Promise.all([
-    fetch(url, { method: "GET" }),
-    fetchExcludedIds(collection, unlistedHandle, context.env),
-  ]);
+  let fwRes, excludeIds;
+  try {
+    [fwRes, excludeIds] = await Promise.all([
+      fetch(url, { method: "GET" }),
+      fetchExcludedIds(collection, unlistedHandle, context.env),
+    ]);
+  } catch {
+    return jsonResponse({ error: "Store temporarily unavailable" }, 503);
+  }
 
   if (!fwRes.ok) return upstreamErrorResponse(fwRes);
 

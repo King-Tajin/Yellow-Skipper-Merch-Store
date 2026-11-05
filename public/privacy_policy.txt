@@ -1,6 +1,6 @@
 YELLOW SKIPPER MERCH STORE PRIVACY POLICY
 
-Last updated: October 30, 2026
+Last updated: November 4, 2026
 
 store.king-tajin.dev is operated by Roland Shikoski.
 
@@ -34,6 +34,27 @@ address is sent to Google when the page loads.
 
 ---
 
+ACCESS CODE AND BOT CHECK
+
+If you open the "Access Code" form to view items that are not shown in the
+public catalog, the Site loads Cloudflare Turnstile (challenges.cloudflare.com)
+to check that you are a human. Turnstile processes technical signals such
+as your IP address, TLS fingerprint, User-Agent header, and the Site's key
+and origin. It is used only to detect and block bots. On our behalf,
+Cloudflare acts as a processor of this data; Cloudflare also uses these
+signals as an independent controller to improve its bot detection. See
+Cloudflare's Turnstile Privacy Addendum
+(https://www.cloudflare.com/turnstile-privacy-policy/) and Cookie Policy
+(https://www.cloudflare.com/cookie-policy/) for details, including any
+cookies Cloudflare uses. The Turnstile check is loaded only when you open
+the form.
+
+When you submit a code, the code and the Turnstile result are sent to our
+server, which checks them with Cloudflare. We do not store the code you
+enter or the Turnstile result.
+
+---
+
 CHECKOUT
 
 When you click "checkout," our server asks Fourthwall to create a cart
@@ -61,9 +82,27 @@ information see https://www.cloudflare.com/web-analytics/
 
 COOKIES
 
-store.king-tajin.dev does not use cookies. Pages hosted on Fourthwall
-(see below) may use cookies and other tracking technologies, as described
-in the Fourthwall-hosted privacy policy.
+store.king-tajin.dev does not use cookies for tracking, analytics, or
+advertising. It sets one strictly necessary cookie, and only after you
+enter a valid access code:
+
+  - Name: unlisted_session
+  - Purpose: remembers for a short time that you entered a valid access
+    code, so you can view the matching items and check them out
+  - Contents: a signed expiry time only, with no personal information
+  - Lifetime: 30 minutes
+  - Settings: HttpOnly, Secure, SameSite=Strict, sent only to our /api
+    requests
+
+If you never use the access code, this cookie is never set. You can delete
+it at any time in your browser settings, after which you will need to
+enter the code again.
+
+Cloudflare Turnstile (see "ACCESS CODE AND BOT CHECK" above) is operated by
+Cloudflare, and any cookies it uses are described in Cloudflare's Cookie
+Policy. Pages hosted on Fourthwall
+(see below) may also use cookies and other tracking technologies, as
+described in the Fourthwall-hosted privacy policy.
 
 ---
 

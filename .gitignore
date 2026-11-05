@@ -13,3 +13,4 @@ yarn-error.log*
 .wrangler
 /.idea/
 /.dev.vars
+/.env

@@ -3,27 +3,28 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "vite",
-    "pages:dev": "pnpm run build && wrangler pages dev --live-reload",
     "build": "vite build && node scripts/generate-og-images.mjs",
-    "typecheck": "node ./node_modules/typescript-7/bin/tsc --noEmit",
-    "lint": "eslint . --cache --cache-location .eslintcache --cache-strategy content",
+    "dev": "vite",
+    "doctor:report": "node scripts/doctor-report.mjs",
     "format": "svgo -f src -r && svgo -f public -r && prettier --write \"src/**/*.{ts,tsx,js,jsx,css,md}\" \"functions/**/*.js\" \"fourthwall/**.html\" \"*.{html,json,js,cjs,md}\" \"scripts/**/*.mjs\" \"public/**/*.{html,json}\"",
     "format:check": "prettier --check \"src/**/*.{ts,tsx,js,jsx,css,md}\" \"functions/**/*.js\" \"fourthwall/**.html\" \"*.{html,json,js,cjs,md}\" \"scripts/**/*.mjs\" \"public/**/*.{html,json}\"",
-    "check": "pnpm run format:check && pnpm run lint && pnpm run typecheck && react-doctor --verbose"
+    "largest-files": "node scripts/largest-files.mjs",
+    "lint": "eslint . --cache --cache-location .eslintcache --cache-strategy content",
+    "pages:dev": "pnpm run build && wrangler pages dev --live-reload",
+    "typecheck": "node ./node_modules/typescript-7/bin/tsc --noEmit"
   },
   "dependencies": {
-    "@tailwindcss/postcss": "^4.3.3",
-    "@vitejs/plugin-react": "^6.1.2",
+    "@tailwindcss/postcss": "^4.3.4",
+    "@vitejs/plugin-react": "^6.2.1",
     "autoprefixer": "^10.6.2",
     "dompurify": "^3.4.17",
     "framer-motion": "^12.43.0",
-    "lucide-react": "^1.66.0",
+    "lucide-react": "^1.67.0",
     "postcss": "^8.5.32",
     "react": "^19.3.1",
     "react-dom": "^19.3.1",
     "sharp": "^0.35.5",
-    "tailwindcss": "^4.3.3",
+    "tailwindcss": "^4.3.4",
     "vite": "^8.3.5",
     "vite-plugin-svgr": "^5.2.0"
   },
@@ -48,7 +49,7 @@
     "eslint": "^10.14.0",
     "eslint-plugin-react": "^7.37.5",
     "eslint-plugin-react-hooks": "^7.1.1",
-    "globals": "^17.13.0",
+    "globals": "^17.14.0",
     "husky": "^9.1.7",
     "lint-staged": "^17.6.0",
     "prettier": "^3.9.10",
@@ -57,7 +58,7 @@
     "typescript": "^6.0.3",
     "typescript-7": "npm:typescript@^7.0.2",
     "typescript-eslint": "^8.72.1",
-    "wrangler": "^4.156.0"
+    "wrangler": "^4.157.0"
   },
   "lint-staged": {
     "src/**/*.{ts,tsx,js,jsx,css,md}": "prettier --write",

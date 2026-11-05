@@ -18,18 +18,6 @@ export default {
         ],
         rules: ["react-doctor/no-layout-property-animation"],
       },
-      {
-        // cartRes.ok is checked right after reading the body text; the text
-        // read is needed for error details on both paths.
-        files: ["**/functions/api/checkout.js"],
-        rules: ["react-doctor/no-fetch-response-used-without-status-check"],
-      },
-      {
-        // Backend always responds 200 with a body-level `ok` flag, and the
-        // call already has a .catch() fallback for non-JSON responses.
-        files: ["**/src/lib/api.ts"],
-        rules: ["react-doctor/no-fetch-response-used-without-status-check"],
-      },
     ],
   },
 } satisfies ReactDoctorConfig;
